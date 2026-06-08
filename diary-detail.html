@@ -348,20 +348,28 @@
  // API
  // ============================================
  const API_BASE = "/api";
- async function apiGet(path = "") {
+        async function apiGet(path = "") {
  const url = API_BASE + "/entries" + path;
  let r;
  try {
  r = await fetch(url, { cache: "no-store" });
  } catch (netErr) {
- throw new Error("网络失败：" + netErr.message);
+ throw new Error("网络失败：" + netErr.message + " · URL: " + url);
+ }
+ const ct = r.headers.get("content-type") || "";
+ const text = await r.text();
+ if (ct.indexOf("application/json") === -1 && text.trim().startsWith("<")) {
+ throw new Error(
+ "URL " + url + " 返回了 HTML 而不是 JSON（HTTP " + r.status + " · " + ct + "）\n" +
+ "这通常是路由写错被 fallback 到 index.html 了。\n\n" +
+ "Body 前200字符：\n" + text.slice(0,200)
+ );
  }
  if (!r.ok) {
- let body = "";
- try { body = await r.text(); } catch (_) {}
- throw new Error("HTTP " + r.status + (body ? " · " + body.slice(0,120) : ""));
+ throw new Error("HTTP " + r.status + " · " + text.slice(0,200));
  }
- return r.json();
+ try { return JSON.parse(text); }
+ catch (e) { throw new Error("JSON解析失败: " + e.message + "\nURL: " + url + "\nBody: " + text.slice(0,200)); }
  }
         async function apiWrite(method, path, body) {
             if (!isAdmin()) throw new Error("NEED_LOGIN");
@@ -534,7 +542,7 @@
  `;
  let e;
  try {
- const data = await apiGet("/entries/" + encodeURIComponent(id));
+                const data = await apiGet("/" + encodeURIComponent(id));
  e = data.entry;
  } catch (err) {
  showFatal("加载失败", err.message, id);
@@ -587,7 +595,7 @@
             let existing = null;
             if (isEdit) {
                 try {
-                    const data = await apiGet("/entries/" + encodeURIComponent(opts.editId));
+                    const data = await apiGet("/" + encodeURIComponent(opts.editId));
                     existing = data.entry;
                 } catch (err) {
                     alert("加载失败: " + err.message);
