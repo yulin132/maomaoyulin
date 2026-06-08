@@ -427,13 +427,14 @@
             adminError.classList.add("show");
         }
         adminForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const t = adminTokenInput.value.trim();
-            if (!t) return showAdminError("请输入密码");
-            setToken(t);
-            hideAdminLogin();
-            if (adminResolve) adminResolve(true);
-        });
+ e.preventDefault();
+ const t = adminTokenInput.value.trim();
+ if (!t) return showAdminError("请输入密码");
+ setToken(t);
+ hideAdminLogin();
+ refreshAdminFab();
+ if (adminResolve) adminResolve(true);
+ });
         document.getElementById("adminCancel").onclick = () => {
             hideAdminLogin();
             if (adminResolve) adminResolve(false);

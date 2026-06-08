@@ -512,18 +512,27 @@
             document.getElementById("confirmModal").classList.remove("show");
         };
         document.getElementById("confirmOk").onclick = async () => {
-            if (pendingDeleteId != null) {
+            if (pendingDeleteId == null) return;
+            let attempts =0;
+            while (attempts <2) {
                 try {
                     await apiWrite("DELETE", "/" + encodeURIComponent(pendingDeleteId));
                     document.getElementById("confirmModal").classList.remove("show");
                     goList();
+                    return;
                 } catch (err) {
-                    if (err.message === "NEED_LOGIN") {
-                        await showAdminLogin();
-                        refreshAdminFab();
-                    } else {
-                        alert("删除失败: " + err.message);
+                    if (err.message !== "NEED_LOGIN") {
+                    alert("删除失败: " + err.message);
+                    return;
                     }
+                    attempts++;
+                    if (attempts >=2) {
+                    alert("登录后仍无法删除，请刷新页面重试");
+                    return;
+                    }
+                    const loggedIn = await showAdminLogin();
+                    refreshAdminFab();
+                    if (!loggedIn) return;
                 }
             }
         };
@@ -672,6 +681,8 @@
                     alert("标题和正文都不能空");
                     return;
                 }
+                let attempts =0;
+                while (attempts <2) {
                 try {
                     if (existing) {
                         await apiWrite("PUT", "/" + encodeURIComponent(existing.id), data);
@@ -679,13 +690,21 @@
                         await apiWrite("POST", "", data);
                     }
                     go(`./diary-detail.html?id=${encodeURIComponent(data.id)}`);
+                    return;
                 } catch (err) {
-                    if (err.message === "NEED_LOGIN") {
-                        await showAdminLogin();
-                        refreshAdminFab();
-                    } else {
-                        alert("保存失败: " + err.message);
+                    if (err.message !== "NEED_LOGIN") {
+                    alert("保存失败: " + err.message);
+                    return;
                     }
+                    attempts++;
+                    if (attempts >=2) {
+                    alert("登录后仍无法保存，请刷新页面重试");
+                    return;
+                    }
+                    const loggedIn = await showAdminLogin();
+                    refreshAdminFab();
+                    if (!loggedIn) return;
+                }
                 }
             };
             setTimeout(() => document.getElementById("fTitle").focus(), 50);
