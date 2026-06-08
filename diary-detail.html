@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./assets/favicon.ico" />
+    <title>读研日记 · maomaoyulin</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Noto+Sans+SC:wght@400;500;700&display=swap"
+        rel="stylesheet"
+    />
+
+    <style>
+        :root {
+            --animal-primary: #19c8b9;
+            --animal-primary-dark: #0fa395;
+            --animal-text: #725d42;
+            --animal-text-soft: #7c5734;
+            --animal-bg-soft: #faf8f3;
+            --animal-border: #e8e2d6;
+            --animal-card: #fff;
+            --animal-shadow: 0 4px 12px rgba(114, 93, 66, 0.08);
+            --animal-radius: 18px;
+            --animal-radius-lg: 24px;
+
+            --cat-life: #e6f9f6; --cat-life-text: #19c8b9;
+            --cat-tech: #f0e8d8; --cat-tech-text: #a08060;
+            --cat-mood: #fde8e7; --cat-mood-text: #d35a55;
+            --cat-food: #fff0d6; --cat-food-text: #c08240;
+        }
+
+        * { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; width: 100%; min-height: 100vh; }
+        body {
+            font-family: "Nunito", "Noto Sans SC", "Zen Maru Gothic",
+                -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            color: var(--animal-text);
+            background: url("./assets/home_bg.webp") 0 0 / auto repeat, #7DC395;
+            animation: bgScroll 80s linear infinite;
+            overflow-x: hidden;
+        }
+        @keyframes bgScroll {
+            0%   { background-position: 100% 0%; }
+            100% { background-position: 0% 100%; }
+        }
+        *::-webkit-scrollbar { display: none; }
+        html { scrollbar-width: none; }
+        a { color: inherit; text-decoration: none; }
+        button { font-family: inherit; }
+
+        /* Top Nav */
+        .top-nav {
+            position: fixed; top: 20px; left: 50%;
+            transform: translateX(-50%); z-index: 50;
+            display: flex; gap: 8px;
+            background: rgba(255, 252, 244, 0.85);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(232, 226, 214, 0.6);
+            border-radius: 999px; padding: 6px;
+            box-shadow: 0 4px 16px rgba(114, 93, 66, 0.1);
+        }
+        .top-nav a {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border-radius: 999px;
+            font-size: 13px; font-weight: 700; color: var(--animal-text-soft);
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+        .top-nav a:hover { background: #f0e8d8; color: var(--animal-text); }
+        .top-nav a.active { background: var(--animal-primary); color: #fff; }
+
+        /* View wrap */
+        .view-wrap {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 100px 40px 60px;
+        }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 13px; font-weight: 700;
+            color: rgba(255, 249, 230, 0.95);
+            margin: 0 0 18px; cursor: pointer;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+        }
+        .back-link:hover { color: #fff; }
+
+        .detail-card, .editor-card {
+            background: var(--animal-card);
+            border: 1px solid var(--animal-border);
+            border-radius: var(--animal-radius-lg);
+            padding: 36px 40px;
+            box-shadow: var(--animal-shadow);
+        }
+        .detail-date {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-size: 12px; font-weight: 800; color: var(--animal-primary);
+            background: #e6f9f6; padding: 5px 12px; border-radius: 999px;
+            margin-bottom: 14px; letter-spacing: 0.5px;
+        }
+        .detail-title {
+            font-family: "Nunito", "Zen Maru Gothic", sans-serif;
+            font-size: 30px; font-weight: 800; color: var(--animal-text);
+            margin: 0 0 6px; line-height: 1.3;
+        }
+        .detail-cat {
+            font-size: 12px; color: var(--animal-text-soft);
+            margin-bottom: 24px; display: flex; align-items: center; gap: 8px;
+        }
+        .detail-cat .cat-chip { font-size: 11px; padding: 3px 10px; }
+        .cat-chip {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 12px; font-weight: 700;
+            padding: 4px 12px; border-radius: 999px;
+        }
+        .cat-chip.life  { background: var(--cat-life);  color: var(--cat-life-text); }
+        .cat-chip.tech  { background: var(--cat-tech);  color: var(--cat-tech-text); }
+        .cat-chip.mood  { background: var(--cat-mood);  color: var(--cat-mood-text); }
+        .cat-chip.food  { background: var(--cat-food);  color: var(--cat-food-text); }
+        .cat-chip.other { background: #ece6f5; color: #8870c4; }
+
+        .detail-content {
+            font-size: 15px; color: var(--animal-text-soft);
+            line-height: 1.95;
+            white-space: pre-wrap; word-wrap: break-word;
+        }
+        .detail-content p { margin: 0 0 16px; }
+        .detail-content p:last-child { margin-bottom: 0; }
+        .detail-actions {
+            display: flex; gap: 10px; margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px dashed var(--animal-border);
+        }
+
+        .btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-family: inherit; font-weight: 700; font-size: 14px; line-height: 1;
+            padding: 10px 18px; border-radius: 14px; border: none; cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.2s ease;
+            user-select: none; white-space: nowrap;
+        }
+        .btn-primary {
+            background: var(--animal-primary); color: #fff;
+            box-shadow: 0 4px 0 var(--animal-primary-dark),
+                0 6px 12px rgba(25, 200, 185, 0.3);
+        }
+        .btn-primary:hover { transform: translateY(-2px); }
+        .btn-primary:active { transform: translateY(2px); }
+        .btn-ghost {
+            background: var(--animal-bg-soft); color: var(--animal-text);
+            box-shadow: 0 4px 0 rgba(114, 93, 66, 0.18);
+        }
+        .btn-ghost:hover { transform: translateY(-2px); background: #fff; }
+        .btn-ghost:active { transform: translateY(2px); }
+        .btn-danger { background: #fde8e7; color: #d35a55; box-shadow: 0 4px 0 #e5b8b3; }
+        .btn-danger:hover { transform: translateY(-2px); background: #fbd6d4; }
+        .btn-sm { padding: 8px 14px; font-size: 13px; border-radius: 12px; }
+
+        /* Editor */
+        .field { margin-bottom: 18px; }
+        .field label {
+            display: block; font-size: 12px; font-weight: 800;
+            color: var(--animal-text); text-transform: uppercase;
+            letter-spacing: 0.5px; margin-bottom: 6px;
+        }
+        .field input[type="text"],
+        .field input[type="date"],
+        .field textarea,
+        .field select {
+            width: 100%; font-family: inherit; font-size: 15px;
+            color: var(--animal-text); background: var(--animal-bg-soft);
+            border: 1.5px solid var(--animal-border);
+            border-radius: 12px; padding: 10px 14px;
+            outline: none; transition: border-color 0.2s ease, background 0.2s ease;
+        }
+        .field input:focus,
+        .field textarea:focus,
+        .field select:focus { border-color: var(--animal-primary); background: #fff; }
+        .field textarea { min-height: 280px; resize: vertical; line-height: 1.8; }
+        .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .editor-actions {
+            display: flex; justify-content: space-between; gap: 10px; margin-top: 8px;
+        }
+        .editor-actions .left { display: flex; gap: 10px; }
+        .editor-actions .right { display: flex; gap: 10px; }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed; inset: 0; z-index: 110;
+            display: none; align-items: center; justify-content: center;
+            padding: 24px; background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-card {
+            background: var(--animal-card);
+            border-radius: var(--animal-radius-lg);
+            border: 1px solid var(--animal-border);
+            padding: 30px 32px; max-width: 360px; width: 100%;
+            text-align: center; box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+        }
+        .modal-title { font-size: 17px; font-weight: 800; color: var(--animal-text); margin: 0 0 8px; }
+        .modal-desc { font-size: 13px; color: var(--animal-text-soft); line-height: 1.6; margin: 0 0 22px; }
+        .modal-actions { display: flex; gap: 10px; justify-content: center; }
+
+        /* Footer */
+        .footer { padding: 32px 40px; text-align: center; font-size: 12px; color: rgba(255, 249, 230, 0.9); text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); }
+        .footer-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 12px; }
+        .footer-link { font-size: 13px; color: #fff9e6; cursor: pointer; font-weight: 600; transition: opacity 0.2s ease; }
+        .footer-link:hover { opacity: 0.7; }
+
+        @media (max-width: 768px) {
+            .view-wrap { padding: 90px 16px 40px; }
+            .detail-card, .editor-card { padding: 24px 22px; }
+            .detail-title { font-size: 24px; }
+            .field-row { grid-template-columns: 1fr; }
+            .editor-actions { flex-direction: column; align-items: stretch; }
+            .editor-actions .left, .editor-actions .right { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <a href="./index.html">🏠 首页</a>
+        <a href="./diary.html" class="active">🌿 读研日记</a>
+    </nav>
+
+    <!-- Delete confirm -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-card">
+            <h3 class="modal-title">🗑️ 删除这篇日记？</h3>
+            <p class="modal-desc" id="confirmDesc">删除后无法恢复。</p>
+            <div class="modal-actions">
+                <button class="btn btn-ghost btn-sm" id="confirmCancel">取消</button>
+                <button class="btn btn-danger btn-sm" id="confirmOk">删除</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="view-wrap" id="viewWrap">
+        <!-- 内容由 JS 渲染 -->
+    </div>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a class="footer-link" href="./index.html">首页</a>
+            <a class="footer-link" href="./diary.html">读研日记</a>
+            <a class="footer-link" href="mailto:1329106053@qq.com">Email</a>
+        </div>
+        <div>© 2026 maomaoyulin · 本地存储</div>
+    </footer>
+
+    <script>
+        // ============================================
+        // 存储：日记直接明文存 localStorage
+        // ============================================
+        const ENTRIES_KEY = "diary:entries";
+        const CATEGORIES = {
+            life:  { label: "生活日常", cls: "life"  },
+            tech:  { label: "技术折腾", cls: "tech"  },
+            mood:  { label: "心情随笔", cls: "mood"  },
+            food:  { label: "吃喝记录", cls: "food"  },
+            other: { label: "其它",     cls: "other" },
+        };
+        function getEntries() {
+            try { return JSON.parse(localStorage.getItem(ENTRIES_KEY) || "[]"); }
+            catch (e) { return []; }
+        }
+        function saveEntries(list) { localStorage.setItem(ENTRIES_KEY, JSON.stringify(list)); }
+        function getEntry(id) { return getEntries().find((e) => String(e.id) === String(id)); }
+        function upsertEntry(entry) {
+            const list = getEntries();
+            const i = list.findIndex((e) => String(e.id) === String(entry.id));
+            if (i >= 0) list[i] = entry;
+            else list.unshift(entry);
+            saveEntries(list);
+        }
+        function deleteEntry(id) {
+            saveEntries(getEntries().filter((e) => String(e.id) !== String(id)));
+        }
+
+        // ============================================
+        // 路由
+        // ============================================
+        function getQuery() {
+            const u = new URL(window.location.href);
+            return {
+                id:   u.searchParams.get("id"),
+                new:  u.searchParams.get("new") === "1",
+                edit: u.searchParams.get("edit"),
+            };
+        }
+        function go(path) { window.location.href = path; }
+        function goList() { go("./diary.html"); }
+        function goEdit(id) { go(`./diary-detail.html?edit=${encodeURIComponent(id)}`); }
+
+        // ============================================
+        // 工具
+        // ============================================
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, (c) => ({
+                "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+            }[c]));
+        }
+        function fmtFullDate(iso) {
+            const d = new Date(iso + "T00:00:00");
+            const WEEK = ["周日","周一","周二","周三","周四","周五","周六"];
+            return `${d.getFullYear()} 年 ${d.getMonth() + 1} 月 ${d.getDate()} 日 · ${WEEK[d.getDay()]}`;
+        }
+        function fmtLastUpdate(ts) {
+            if (!ts) return "--";
+            const d = new Date(ts);
+            const pad = (n) => String(n).padStart(2, "0");
+            return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        }
+
+        // ============================================
+        // 删除确认
+        // ============================================
+        let pendingDeleteId = null;
+        function confirmDelete(entry) {
+            pendingDeleteId = entry.id;
+            document.getElementById("confirmDesc").textContent = `「${entry.title}」 删除后无法恢复。`;
+            document.getElementById("confirmModal").classList.add("show");
+        }
+        document.getElementById("confirmCancel").onclick = () => {
+            pendingDeleteId = null;
+            document.getElementById("confirmModal").classList.remove("show");
+        };
+        document.getElementById("confirmOk").onclick = () => {
+            if (pendingDeleteId != null) {
+                deleteEntry(pendingDeleteId);
+                pendingDeleteId = null;
+                document.getElementById("confirmModal").classList.remove("show");
+                goList();
+            }
+        };
+
+        // ============================================
+        // 渲染
+        // ============================================
+        const viewWrap = document.getElementById("viewWrap");
+
+        function renderDetail(id) {
+            const e = getEntry(id);
+            if (!e) {
+                alert("这篇日记不存在或已被删除");
+                goList();
+                return;
+            }
+            const cat = CATEGORIES[e.category] || CATEGORIES.other;
+            const content = (e.content || "").trim();
+            const paragraphs = content.split(/\n\s*\n/).filter(Boolean);
+            const html = paragraphs.length > 0
+                ? paragraphs.map((p) => `<p>${escapeHtml(p)}</p>`).join("")
+                : `<p>${escapeHtml(content)}</p>`;
+            viewWrap.innerHTML = `
+                <a class="back-link" id="backLink">← 返回列表</a>
+                <article class="detail-card">
+                    <div class="detail-date">📅 ${escapeHtml(fmtFullDate(e.date))}</div>
+                    <h1 class="detail-title">${escapeHtml(e.title || "")}</h1>
+                    <div class="detail-cat">
+                        <span class="cat-chip ${cat.cls}">${escapeHtml(cat.label)}</span>
+                        <span>最后编辑：${escapeHtml(fmtLastUpdate(e.updatedAt))}</span>
+                    </div>
+                    <div class="detail-content">${html}</div>
+                    <div class="detail-actions">
+                        <button class="btn btn-ghost btn-sm" id="detailEdit">✏️ 编辑</button>
+                        <button class="btn btn-danger btn-sm" id="detailDelete">🗑️ 删除</button>
+                    </div>
+                </article>
+            `;
+            document.getElementById("backLink").onclick = goList;
+            document.getElementById("detailEdit").onclick = () => goEdit(e.id);
+            document.getElementById("detailDelete").onclick = () => confirmDelete(e);
+        }
+
+        function renderEditor(opts = {}) {
+            const isEdit = !!opts.editId;
+            const existing = isEdit ? getEntry(opts.editId) : null;
+            const today = new Date().toISOString().slice(0, 10);
+            viewWrap.innerHTML = `
+                <a class="back-link" id="backLink">← ${isEdit && existing ? "返回详情" : "返回列表"}</a>
+                <form class="editor-card" id="editorForm">
+                    <h2 class="detail-title" style="margin-bottom: 24px;">${isEdit ? "编辑日记" : "写新日记"}</h2>
+                    <div class="field-row">
+                        <div class="field">
+                            <label for="fDate">日期</label>
+                            <input type="date" id="fDate" required value="${escapeHtml(existing ? existing.date : today)}" />
+                        </div>
+                        <div class="field">
+                            <label for="fCategory">分类</label>
+                            <select id="fCategory">
+                                <option value="life">🌱 生活日常</option>
+                                <option value="tech">🛠️ 技术折腾</option>
+                                <option value="mood">💭 心情随笔</option>
+                                <option value="food">🍜 吃喝记录</option>
+                                <option value="other">📦 其它</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="fTitle">标题</label>
+                        <input type="text" id="fTitle" placeholder="今天发现了一家超棒的咖啡店 ☕" required maxlength="80" value="${escapeHtml(existing ? existing.title : "")}" />
+                    </div>
+                    <div class="field">
+                        <label for="fContent">正文</label>
+                        <textarea id="fContent" placeholder="想写点什么？" required>${escapeHtml(existing ? existing.content : "")}</textarea>
+                    </div>
+                    <div class="editor-actions">
+                        <div class="left">
+                            <button type="button" class="btn btn-ghost btn-sm" id="editorCancel">取消</button>
+                        </div>
+                        <div class="right">
+                            <button type="button" class="btn btn-danger btn-sm" id="editorDelete" style="${isEdit ? "" : "display: none;"}">🗑️ 删除</button>
+                            <button type="submit" class="btn btn-primary btn-sm">💾 保存</button>
+                        </div>
+                    </div>
+                </form>
+            `;
+            // 设置 select 选中
+            const cat = existing ? (existing.category || "life") : "life";
+            document.getElementById("fCategory").value = cat;
+
+            document.getElementById("backLink").onclick = () =>
+                isEdit && existing ? go(`./diary-detail.html?id=${encodeURIComponent(existing.id)}`) : goList();
+            document.getElementById("editorCancel").onclick = () =>
+                isEdit && existing ? go(`./diary-detail.html?id=${encodeURIComponent(existing.id)}`) : goList();
+            if (isEdit && existing) {
+                document.getElementById("editorDelete").onclick = () => confirmDelete(existing);
+            }
+            document.getElementById("editorForm").onsubmit = (ev) => {
+                ev.preventDefault();
+                const now = Date.now();
+                const data = {
+                    id:        existing ? existing.id : now,
+                    date:      document.getElementById("fDate").value || today,
+                    category:  document.getElementById("fCategory").value,
+                    title:     document.getElementById("fTitle").value.trim(),
+                    content:   document.getElementById("fContent").value.trim(),
+                    createdAt: existing ? (existing.createdAt || now) : now,
+                    updatedAt: now,
+                };
+                if (!data.title || !data.content) {
+                    alert("标题和正文都不能空");
+                    return;
+                }
+                upsertEntry(data);
+                go(`./diary-detail.html?id=${encodeURIComponent(data.id)}`);
+            };
+            setTimeout(() => document.getElementById("fTitle").focus(), 50);
+        }
+
+        function render() {
+            const q = getQuery();
+            if (q.edit) renderEditor({ editId: q.edit });
+            else if (q.new) renderEditor({});
+            else if (q.id) renderDetail(q.id);
+            else goList();
+        }
+
+        render();
+
+        // ESC 关闭弹窗
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                if (document.getElementById("confirmModal").classList.contains("show")) {
+                    document.getElementById("confirmCancel").click();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,798 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./assets/favicon.ico" />
+    <title>Hi, 我是maomaoyulin</title>
+
+    <!-- Fonts: 与原项目保持一致 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Noto+Sans+SC:wght@400;500;700&display=swap"
+        rel="stylesheet"
+    />
+
+    <style>
+        /* ============================================
+           Design Tokens (与 animal-island-ui 对齐)
+           ============================================ */
+        :root {
+            --animal-primary: #19c8b9;
+            --animal-text: #725d42;
+            --animal-text-soft: #7c5734;
+            --animal-cream: #fff9e6;
+            --animal-bg-soft: #faf8f3;
+            --animal-border: #e8e2d6;
+            --animal-card: #fff;
+            --animal-shadow: 0 4px 12px rgba(114, 93, 66, 0.08);
+            --animal-shadow-hover: 0 8px 24px rgba(114, 93, 66, 0.15);
+            --animal-radius: 18px;
+            --animal-radius-lg: 24px;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        body {
+            font-family: "Nunito", "Noto Sans SC", "Zen Maru Gothic",
+                -apple-system, "PingFang SC", "Hiragino Sans GB",
+                "Microsoft YaHei", sans-serif;
+            color: var(--animal-text);
+            background: url("./assets/home_bg.webp") 0 0 / auto repeat, #7DC395;
+            animation: bgScroll 80s linear infinite;
+            overflow-x: hidden;
+        }
+
+        @keyframes bgScroll {
+            0%   { background-position: 100% 0%; }
+            100% { background-position: 0% 100%; }
+        }
+
+        *::-webkit-scrollbar { display: none; }
+        html { scrollbar-width: none; }
+
+        a { color: inherit; text-decoration: none; }
+
+        /* ============================================
+           Layout
+           ============================================ */
+        .page {
+            width: 100%;
+            min-height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .section {
+            padding: 48px 40px;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: "Nunito", "Zen Maru Gothic", sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--animal-text);
+            margin: 0 0 8px;
+            text-align: center;
+        }
+
+        .section-desc {
+            font-size: 14px;
+            color: var(--animal-text-soft);
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        /* ============================================
+           Hero
+           ============================================ */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 60px 40px 40px;
+            position: relative;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 100px;
+            align-items: center;
+            max-width: 880px;
+            width: 100%;
+        }
+
+        .hero-text { text-align: left; }
+
+        .hero-greeting {
+            font-size: 14px;
+            color: var(--animal-cream);
+            opacity: 0.9;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .hero-title {
+            font-family: "Nunito", "Zen Maru Gothic", sans-serif;
+            font-size: 55px;
+            font-weight: 800;
+            line-height: 1.1;
+            color: #fff9e6;
+            text-shadow: 0 4px 1px rgba(0, 0, 0, 0.4);
+            margin: 0 0 12px;
+        }
+
+        /* ============================================
+           Live Clock (描边字样式 — 模仿 maomaoyulin 视觉)
+           ============================================ */
+        .clock-row {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+            margin: 4px 0 14px;
+            flex-wrap: wrap;
+        }
+        .clock-time {
+            font-family: "Nunito", "Zen Maru Gothic", sans-serif;
+            font-size: 56px;
+            font-weight: 900;
+            line-height: 1;
+            color: #fff9e6;
+            -webkit-text-stroke: 2px #4a3a28;
+            paint-order: stroke fill;
+            text-shadow:
+                0 4px 1px rgba(0, 0, 0, 0.4),
+                0 1px 0 rgba(0, 0, 0, 0.25);
+            letter-spacing: 1px;
+            font-variant-numeric: tabular-nums;
+        }
+        .clock-date {
+            font-family: "Nunito", "Noto Sans SC", sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff9e6;
+            -webkit-text-stroke: 1px #4a3a28;
+            paint-order: stroke fill;
+            text-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+            letter-spacing: 0.3px;
+            padding: 4px 10px;
+            background: rgba(74, 58, 40, 0.18);
+            border-radius: 10px;
+            backdrop-filter: blur(2px);
+        }
+        /* 冒号常亮，静态 */
+
+        .hero-role {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 12px;
+            background: #e6f9f6;
+            color: #19c8b9;
+            margin-bottom: 18px;
+        }
+
+        .hero-subtitle {
+            font-size: 17px;
+            color: #fff9e6;
+            line-height: 1.7;
+            margin: 0 0 28px;
+            max-width: 520px;
+            min-height: 56px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .hero-avatar {
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-avatar img {
+            width: 320px;
+            height: 200px;
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.18));
+            animation: floaty 4s ease-in-out infinite;
+        }
+
+        @keyframes floaty {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-10px); }
+        }
+
+        /* ============================================
+           Buttons
+           ============================================ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 15px;
+            line-height: 1;
+            padding: 12px 24px;
+            border-radius: 14px;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.2s ease,
+                background 0.2s ease;
+            user-select: none;
+        }
+
+        .btn-primary {
+            background: var(--animal-primary);
+            color: #fff;
+            box-shadow: 0 4px 0 #0fa395, 0 6px 12px rgba(25, 200, 185, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #0fa395, 0 10px 20px rgba(25, 200, 185, 0.35);
+        }
+        .btn-primary:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #0fa395, 0 3px 6px rgba(25, 200, 185, 0.3);
+        }
+
+        .btn-ghost {
+            background: rgba(255, 249, 230, 0.85);
+            color: var(--animal-text);
+            box-shadow: 0 4px 0 rgba(114, 93, 66, 0.18);
+        }
+        .btn-ghost:hover {
+            transform: translateY(-2px);
+            background: #fff;
+            box-shadow: 0 6px 0 rgba(114, 93, 66, 0.2);
+        }
+        .btn-ghost:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 rgba(114, 93, 66, 0.18);
+        }
+
+        /* ============================================
+           Scroll Hint
+           ============================================ */
+        .scroll-hint {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .scroll-hint span {
+            color: #fff9e6;
+            font-size: 12px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0);   opacity: 1; }
+            50%      { transform: translateX(-50%) translateY(-8px); opacity: 0.7; }
+        }
+
+        /* ============================================
+           Cards (用于技能/关于我)
+           ============================================ */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .card {
+            background: var(--animal-card);
+            border: 1px solid var(--animal-border);
+            border-radius: var(--animal-radius);
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: var(--animal-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--animal-shadow-hover);
+        }
+
+        .card img {
+            width: 42px;
+            height: 42px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover img {
+            transform: scale(1.1) rotate(-4deg);
+            animation: iconBounce 0.4s ease forwards;
+        }
+
+        @keyframes iconBounce {
+            0%   { transform: scale(1)   rotate(0deg); }
+            50%  { transform: scale(1.2) rotate(-5deg); }
+            100% { transform: scale(1.1) rotate(-4deg); }
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--animal-text);
+            margin: 12px 0 6px;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: var(--animal-text-soft);
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ============================================
+           Divider
+           ============================================ */
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 0 auto;
+            max-width: 800px;
+        }
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 249, 230, 0.6),
+                transparent
+            );
+        }
+        .divider span {
+            color: #fff9e6;
+            font-size: 18px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ============================================
+           About
+           ============================================ */
+        .about-card {
+            background: var(--animal-card);
+            border: 1px solid var(--animal-border);
+            border-radius: var(--animal-radius-lg);
+            padding: 32px 36px;
+            max-width: 720px;
+            margin: 0 auto;
+            box-shadow: var(--animal-shadow);
+            position: relative;
+        }
+        .about-card::before {
+            content: "“";
+            position: absolute;
+            top: -10px;
+            left: 18px;
+            font-size: 80px;
+            color: var(--animal-primary);
+            line-height: 1;
+            font-family: Georgia, serif;
+        }
+        .about-text {
+            font-size: 15px;
+            color: var(--animal-text-soft);
+            line-height: 1.9;
+            margin: 0;
+        }
+        .about-text p { margin: 0 0 14px; }
+        .about-text p:last-child { margin-bottom: 0; }
+        .about-text strong {
+            color: var(--animal-text);
+            background: linear-gradient(transparent 65%, rgba(25, 200, 185, 0.22) 65%);
+            padding: 0 2px;
+        }
+
+        /* ============================================
+           Timeline
+           ============================================ */
+        .timeline {
+            position: relative;
+            max-width: 720px;
+            margin: 0 auto;
+            padding-left: 32px;
+        }
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 8px;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: linear-gradient(180deg, #19c8b9, #5abf98);
+            border-radius: 2px;
+        }
+        .tl-item {
+            position: relative;
+            padding: 0 0 28px 24px;
+        }
+        .tl-item:last-child { padding-bottom: 0; }
+        .tl-item::before {
+            content: "";
+            position: absolute;
+            left: -28px;
+            top: 6px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #fff;
+            border: 3px solid #19c8b9;
+            box-shadow: 0 0 0 4px rgba(25, 200, 185, 0.15);
+        }
+        .tl-period {
+            font-size: 12px;
+            font-weight: 700;
+            color: #19c8b9;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+        .tl-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--animal-text);
+            margin: 0 0 2px;
+        }
+        .tl-company {
+            font-size: 13px;
+            color: var(--animal-text-soft);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .tl-desc {
+            font-size: 13px;
+            color: var(--animal-text-soft);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* ============================================
+           Contact
+           ============================================ */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+        .contact-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--animal-card);
+            border: 1px solid var(--animal-border);
+            border-radius: var(--animal-radius);
+            padding: 16px 18px;
+            box-shadow: var(--animal-shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .contact-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--animal-shadow-hover);
+        }
+        .contact-icon {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: #e6f9f6;
+            color: #19c8b9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .contact-icon svg { width: 20px; height: 20px; }
+        .contact-text { display: flex; flex-direction: column; }
+        .contact-label {
+            font-size: 11px;
+            color: var(--animal-text-soft);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+        }
+        .contact-value {
+            font-size: 14px;
+            color: var(--animal-text);
+            font-weight: 600;
+        }
+
+        /* ============================================
+           Footer
+           ============================================ */
+        .footer {
+            padding: 32px 40px;
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255, 249, 230, 0.9);
+            margin-top: 32px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 12px;
+        }
+        .footer-link {
+            font-size: 13px;
+            color: #fff9e6;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.2s ease;
+        }
+        .footer-link:hover { opacity: 0.7; }
+
+        /* ============================================
+           Top Nav
+           ============================================ */
+        .top-nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 252, 244, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(232, 226, 214, 0.6);
+            border-radius: 999px;
+            padding: 6px;
+            box-shadow: 0 4px 16px rgba(114, 93, 66, 0.1);
+        }
+        .top-nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--animal-text-soft);
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+        .top-nav a:hover { background: #f0e8d8; color: var(--animal-text); }
+        .top-nav a.active {
+            background: var(--animal-primary);
+            color: #fff;
+        }
+
+        /* ============================================
+           Responsive
+           ============================================ */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+                text-align: center;
+            }
+            .hero-text { text-align: center; }
+            .hero-title { font-size: 38px; }
+            .hero-subtitle { font-size: 14px; margin: 0 auto 24px; }
+            .hero-actions { justify-content: center; }
+            .hero-avatar img { width: 200px; height: 124px; }
+            .section { padding: 32px 16px; }
+            .about-card { padding: 24px 20px; }
+            .top-nav { top: 12px; font-size: 12px; }
+            .top-nav a { padding: 5px 10px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <nav class="top-nav">
+        <a href="./index.html" class="active">🏠 首页</a>
+        <a href="./diary.html">🌿 读研日记</a>
+    </nav>
+
+    <div class="page">
+        <!-- Hero -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <div class="hero-greeting">HELLO, WELCOME TO MY ISLAND</div>
+                    <h1 class="hero-title">Hi, 我是<br />maomaoyulin</h1>
+
+                    <!-- Live clock — 描边字样式 -->
+                    <div class="clock-row">
+                        <div class="clock-time" id="clockTime">--:--:--</div>
+                        <div class="clock-date" id="clockDate">--</div>
+                    </div>
+
+                    <span class="hero-role">
+                        <span>🌿</span> 吃饭大王
+                    </span>
+                    <p class="hero-subtitle" id="typewriter"></p>
+                    <div class="hero-actions">
+                        <a class="btn btn-primary" href="./diary.html">
+                            查看读研日记 →
+                        </a>
+                        <a class="btn btn-ghost" href="#contact">
+                            联系我
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-avatar">
+                    <img
+                        src="./assets/animal_icon.png"
+                        alt="avatar"
+                        decoding="async"
+                    />
+                </div>
+            </div>
+
+            <div class="scroll-hint" onclick="window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })">
+                <span>向下滑动</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M12 5v14M5 12l7 7 7-7"
+                        stroke="#fff9e6"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+                </svg>
+            </div>
+        </section>
+
+        <div class="divider"><span>🍃</span></div>
+
+        <!-- 关于我 -->
+        <section class="section" id="about">
+            <h2 class="section-title">关于我</h2>
+            <p class="section-desc">A little bit about myself</p>
+            <div class="about-card">
+                <p class="about-text">
+                    <p>你好呀，欢迎来到我的小岛 🌴。我叫 <strong>maomaoyulin</strong>，最爱摘苹果。</p>
+                    <p>如果你也在做一些有趣的事，欢迎来找我聊聊 ☕️</p>
+                </p>
+            </div>
+        </section>
+
+        <div class="divider"><span>🍃</span></div>
+
+    
+        <!-- 联系 -->
+ <section class="section" id="contact">
+            <h2 class="section-title">联系我</h2>
+            <p class="section-desc">Let's build something fun together</p>
+            
+            <div class="contact-grid" style="display: flex; justify-content: center;">
+                
+                <a class="contact-card" href="mailto:1329106053@qq.com" style="width: 100%; max-width: 360px; box-sizing: border-box;">
+                    <div class="contact-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                    </div>
+                    <div class="contact-text">
+                        <span class="contact-label">Email</span>
+                        <span class="contact-value">1329106053@qq.com</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-links">
+                <a class="footer-link" href="./index.html">首页</a>
+                <a class="footer-link" href="./diary.html">读研日记</a>
+                <a class="footer-link" href="mailto:1329106053@qq.com">Email</a>
+                <a class="footer-link" href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+            </div>
+            <div>© 2026 maomaoyulin · Made with 🌿 & animal-island-ui style</div>
+        </footer>
+    </div>
+
+    <script>
+        // ============================================
+        // 实时时间 + 日期 (描边字样式)
+        // ============================================
+        (function () {
+            const tEl = document.getElementById("clockTime");
+            const dEl = document.getElementById("clockDate");
+            if (!tEl || !dEl) return;
+
+            const WEEK = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+
+            const pad = (n) => String(n).padStart(2, "0");
+
+            function render() {
+                const d = new Date();
+                const hh = pad(d.getHours());
+                const mm = pad(d.getMinutes());
+                const ss = pad(d.getSeconds());
+                tEl.innerHTML = `${hh}<span class="colon">:</span>${mm}<span class="colon">:</span>${ss}`;
+
+                const y = d.getFullYear();
+                const m = d.getMonth() + 1;
+                const day = d.getDate();
+                const w = WEEK[d.getDay()];
+                dEl.textContent = `${y} 年 ${m} 月 ${day} 日 · ${w}`;
+            }
+
+            render();
+            setInterval(render, 1000);
+        })();
+
+        // 简易 Typewriter 效果
+        (function () {
+            const el = document.getElementById("typewriter");
+            if (!el) return;
+            const lines = [
+                "在键盘上写代码，也在小岛上种花 🌻。",
+                "开始读研。",
+                "想一起做点好玩的事？👉 翻到底联系我 ☕️",
+            ];
+            let li = 0, ci = 0, deleting = false;
+            function tick() {
+                const cur = lines[li];
+                if (!deleting) {
+                    ci++;
+                    el.textContent = cur.slice(0, ci);
+                    if (ci === cur.length) {
+                        deleting = true;
+                        setTimeout(tick, 1800);
+                        return;
+                    }
+                    setTimeout(tick, 60);
+                } else {
+                    ci--;
+                    el.textContent = cur.slice(0, ci);
+                    if (ci === 0) {
+                        deleting = false;
+                        li = (li + 1) % lines.length;
+                        setTimeout(tick, 300);
+                        return;
+                    }
+                    setTimeout(tick, 30);
+                }
+            }
+            tick();
+        })();
+    </script>
+</body>
+</html>

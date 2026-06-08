@@ -1,0 +1,8 @@
+﻿# 编辑器 / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# 本地测试
+*.log
