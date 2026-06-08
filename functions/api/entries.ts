@@ -1,5 +1,5 @@
-// GET  /api/entries        — 列出所有日记
-// POST /api/entries        — 创建新日记
+// GET  /api/entries        — 列出所有（公开）
+// POST /api/entries        — 创建新日记（需 token）
 
 export interface Env {
   DB: D1Database;
@@ -26,14 +26,12 @@ function cors() {
   };
 }
 
-export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
-  if (!checkAuth(request, env)) return unauthorized();
-
+export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
+  // 读：公开（所有人都能看）
   const { results } = await env.DB.prepare(
     "SELECT id, date, category, title, content, created_at, updated_at FROM entries ORDER BY date DESC, updated_at DESC"
   ).all();
 
-  // 字段名 snake_case → camelCase 给前端
   const entries = results.map((r: any) => ({
     id: r.id,
     date: r.date,
@@ -51,6 +49,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 };
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
+  // 写：需要 token
   if (!checkAuth(request, env)) return unauthorized();
 
   let body: any;

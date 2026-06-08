@@ -1,6 +1,6 @@
-// GET    /api/entries/:id  — 获取单篇
-// PUT    /api/entries/:id  — 更新单篇
-// DELETE /api/entries/:id  — 删除单篇
+// GET    /api/entries/:id  — 获取单篇（公开）
+// PUT    /api/entries/:id  — 更新（需 token）
+// DELETE /api/entries/:id  — 删除（需 token）
 
 export interface Env {
   DB: D1Database;
@@ -27,9 +27,8 @@ function cors() {
   };
 }
 
-export const onRequestGet: PagesFunction<Env> = async ({ request, env, params }) => {
-  if (!checkAuth(request, env)) return unauthorized();
-
+export const onRequestGet: PagesFunction<Env> = async ({ env, params }) => {
+  // 读：公开
   const id = String(params.id);
   const row: any = await env.DB.prepare(
     "SELECT id, date, category, title, content, created_at, updated_at FROM entries WHERE id = ?"
@@ -58,6 +57,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env, params })
 };
 
 export const onRequestPut: PagesFunction<Env> = async ({ request, env, params }) => {
+  // 写：需要 token
   if (!checkAuth(request, env)) return unauthorized();
 
   const id = String(params.id);
@@ -89,6 +89,7 @@ export const onRequestPut: PagesFunction<Env> = async ({ request, env, params })
 };
 
 export const onRequestDelete: PagesFunction<Env> = async ({ request, env, params }) => {
+  // 写：需要 token
   if (!checkAuth(request, env)) return unauthorized();
 
   const id = String(params.id);

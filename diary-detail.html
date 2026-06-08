@@ -185,60 +185,6 @@
         .editor-actions .left { display: flex; gap: 10px; }
         .editor-actions .right { display: flex; gap: 10px; }
 
-        /* Token gate */
-        .token-overlay {
-            position: fixed; inset: 0; z-index: 200;
-            display: flex; align-items: center; justify-content: center;
-            padding: 24px;
-            background: rgba(125, 195, 149, 0.6);
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-        }
-        .token-card {
-            background: var(--animal-card);
-            border-radius: var(--animal-radius-lg);
-            border: 1px solid var(--animal-border);
-            padding: 32px 36px; width: 100%; max-width: 380px;
-            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
-            text-align: center;
-        }
-        .token-icon { font-size: 40px; margin-bottom: 6px; }
-        .token-title { font-size: 18px; font-weight: 800; color: var(--animal-text); margin: 0 0 6px; }
-        .token-desc { font-size: 13px; color: var(--animal-text-soft); line-height: 1.6; margin: 0 0 18px; }
-        .token-form { display: flex; flex-direction: column; gap: 10px; text-align: left; }
-        .token-form input {
-            width: 100%; font-family: inherit; font-size: 14px;
-            color: var(--animal-text); background: var(--animal-bg-soft);
-            border: 1.5px solid var(--animal-border);
-            border-radius: 12px; padding: 10px 14px;
-            outline: none;
-        }
-        .token-form input:focus { border-color: var(--animal-primary); background: #fff; }
-        .token-error {
-            font-size: 12px; color: #d35a55; background: #fde8e7;
-            padding: 6px 10px; border-radius: 8px;
-            display: none;
-        }
-        .token-error.show { display: block; }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed; inset: 0; z-index: 110;
-            display: none; align-items: center; justify-content: center;
-            padding: 24px; background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(4px);
-        }
-        .modal-overlay.show { display: flex; }
-        .modal-card {
-            background: var(--animal-card);
-            border-radius: var(--animal-radius-lg);
-            border: 1px solid var(--animal-border);
-            padding: 30px 32px; max-width: 360px; width: 100%;
-            text-align: center; box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
-        }
-        .modal-title { font-size: 17px; font-weight: 800; color: var(--animal-text); margin: 0 0 8px; }
-        .modal-desc { font-size: 13px; color: var(--animal-text-soft); line-height: 1.6; margin: 0 0 22px; }
-        .modal-actions { display: flex; gap: 10px; justify-content: center; }
-
         /* Loading */
         .loading-card {
             background: var(--animal-card);
@@ -250,6 +196,67 @@
         }
         .loading-icon { font-size: 56px; display: inline-block; animation: spin 1.4s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed; inset: 0; z-index: 200;
+            display: none; align-items: center; justify-content: center;
+            padding: 24px; background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-card {
+            background: var(--animal-card);
+            border-radius: var(--animal-radius-lg);
+            border: 1px solid var(--animal-border);
+            padding: 28px 30px; max-width: 360px; width: 100%;
+            text-align: center; box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+        }
+        .modal-icon { font-size: 36px; margin-bottom: 6px; }
+        .modal-title { font-size: 17px; font-weight: 800; color: var(--animal-text); margin: 0 0 6px; }
+        .modal-desc { font-size: 13px; color: var(--animal-text-soft); line-height: 1.6; margin: 0 0 16px; }
+        .modal-form { display: flex; flex-direction: column; gap: 10px; }
+        .modal-form input {
+            width: 100%; font-family: inherit; font-size: 14px;
+            color: var(--animal-text); background: var(--animal-bg-soft);
+            border: 1.5px solid var(--animal-border);
+            border-radius: 12px; padding: 10px 14px;
+            outline: none;
+        }
+        .modal-form input:focus { border-color: var(--animal-primary); background: #fff; }
+        .modal-error {
+            font-size: 12px; color: #d35a55; background: #fde8e7;
+            padding: 6px 10px; border-radius: 8px;
+            display: none;
+        }
+        .modal-error.show { display: block; }
+        .modal-actions { display: flex; gap: 10px; justify-content: center; margin-top: 6px; }
+
+        /* Admin FAB */
+        .admin-fab {
+            position: fixed; bottom: 24px; right: 24px;
+            z-index: 60;
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-size: 13px; font-weight: 700;
+            background: var(--animal-card);
+            color: var(--animal-text);
+            border: 1px solid var(--animal-border);
+            box-shadow: var(--animal-shadow);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .admin-fab:hover { transform: translateY(-2px); box-shadow: var(--animal-shadow-hover); }
+        .admin-fab.logged {
+            background: #e6f9f6; color: var(--animal-primary);
+            border-color: rgba(25, 200, 185, 0.3);
+        }
+        .admin-fab .dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: #a0a0a0; display: inline-block;
+        }
+        .admin-fab.logged .dot { background: var(--animal-primary); }
 
         /* Footer */
         .footer { padding: 32px 40px; text-align: center; font-size: 12px; color: rgba(255, 249, 230, 0.9); text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); }
@@ -264,6 +271,7 @@
             .field-row { grid-template-columns: 1fr; }
             .editor-actions { flex-direction: column; align-items: stretch; }
             .editor-actions .left, .editor-actions .right { justify-content: center; }
+            .admin-fab { bottom: 16px; right: 16px; }
         }
     </style>
 </head>
@@ -273,16 +281,19 @@
         <a href="./diary.html" class="active">🌿 读研日记</a>
     </nav>
 
-    <!-- Token gate -->
-    <div class="token-overlay" id="tokenOverlay" style="display: none;">
-        <div class="token-card">
-            <div class="token-icon">🔑</div>
-            <h2 class="token-title">输入访问密码</h2>
-            <p class="token-desc">需要密码才能查看/编辑日记。</p>
-            <form class="token-form" id="tokenForm">
-                <input type="password" id="tokenInput" placeholder="访问密码" autocomplete="off" />
-                <button type="submit" class="btn btn-primary" style="width: 100%;">进入</button>
-                <div class="token-error" id="tokenError"></div>
+    <!-- Admin login modal -->
+    <div class="modal-overlay" id="adminModal">
+        <div class="modal-card">
+            <div class="modal-icon">🔑</div>
+            <h2 class="modal-title">管理员登录</h2>
+            <p class="modal-desc">只有你能编辑 / 删除这篇日记。<br />输入密码解锁管理权限。</p>
+            <form class="modal-form" id="adminForm">
+                <input type="password" id="adminTokenInput" placeholder="管理员密码" autocomplete="off" />
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-ghost btn-sm" id="adminCancel">取消</button>
+                    <button type="submit" class="btn btn-primary btn-sm">登录</button>
+                </div>
+                <div class="modal-error" id="adminError"></div>
             </form>
         </div>
     </div>
@@ -306,13 +317,18 @@
         </div>
     </div>
 
+    <button class="admin-fab" id="adminFab">
+        <span class="dot"></span>
+        <span id="adminFabText">🔑 管理员登录</span>
+    </button>
+
     <footer class="footer">
         <div class="footer-links">
             <a class="footer-link" href="./index.html">首页</a>
             <a class="footer-link" href="./diary.html">读研日记</a>
             <a class="footer-link" href="mailto:1329106053@qq.com">Email</a>
         </div>
-        <div>© 2026 maomaoyulin · Cloudflare D1 同步</div>
+        <div>© 2026 maomaoyulin · 公开阅读 · Cloudflare D1</div>
     </footer>
 
     <script>
@@ -323,20 +339,19 @@
         function getToken() { return localStorage.getItem(TOKEN_KEY) || ""; }
         function setToken(t) { localStorage.setItem(TOKEN_KEY, t); }
         function clearToken() { localStorage.removeItem(TOKEN_KEY); }
+        function isAdmin() { return !!getToken(); }
 
         // ============================================
         // API
         // ============================================
         const API_BASE = "/api";
         async function apiGet(path = "") {
-            const r = await fetch(API_BASE + "/entries" + path, {
-                headers: { Authorization: "Bearer " + getToken() },
-            });
-            if (r.status === 401) throw new Error("Unauthorized");
+            const r = await fetch(API_BASE + "/entries" + path);
             if (!r.ok) throw new Error("HTTP " + r.status);
             return r.json();
         }
-        async function apiSend(method, path, body) {
+        async function apiWrite(method, path, body) {
+            if (!isAdmin()) throw new Error("NEED_LOGIN");
             const r = await fetch(API_BASE + "/entries" + path, {
                 method,
                 headers: {
@@ -345,7 +360,7 @@
                 },
                 body: body ? JSON.stringify(body) : undefined,
             });
-            if (r.status === 401) throw new Error("Unauthorized");
+            if (r.status === 401) { clearToken(); throw new Error("NEED_LOGIN"); }
             if (!r.ok) {
                 const t = await r.text();
                 throw new Error(t || "HTTP " + r.status);
@@ -381,41 +396,71 @@
         }
 
         // ============================================
-        // Token gate
+        // Admin login
         // ============================================
-        const tokenOverlay = document.getElementById("tokenOverlay");
-        const tokenForm = document.getElementById("tokenForm");
-        const tokenInput = document.getElementById("tokenInput");
-        const tokenError = document.getElementById("tokenError");
+        const adminModal = document.getElementById("adminModal");
+        const adminForm = document.getElementById("adminForm");
+        const adminTokenInput = document.getElementById("adminTokenInput");
+        const adminError = document.getElementById("adminError");
+        const adminFab = document.getElementById("adminFab");
+        const adminFabText = document.getElementById("adminFabText");
 
-        function showTokenGate() {
-            tokenOverlay.style.display = "flex";
-            setTimeout(() => tokenInput.focus(), 100);
+        let adminResolve = null;
+        function showAdminLogin() {
+            return new Promise((resolve) => {
+                adminResolve = resolve;
+                adminTokenInput.value = "";
+                adminError.classList.remove("show");
+                adminModal.classList.add("show");
+                setTimeout(() => adminTokenInput.focus(), 100);
+            });
         }
-        function hideTokenGate() { tokenOverlay.style.display = "none"; }
-        function showTokenError(msg) {
-            tokenError.textContent = msg;
-            tokenError.classList.add("show");
+        function hideAdminLogin() {
+            adminModal.classList.remove("show");
         }
-        tokenForm.addEventListener("submit", async (e) => {
+        function showAdminError(msg) {
+            adminError.textContent = msg;
+            adminError.classList.add("show");
+        }
+        adminForm.addEventListener("submit", (e) => {
             e.preventDefault();
-            const t = tokenInput.value.trim();
-            if (!t) return showTokenError("请输入密码");
+            const t = adminTokenInput.value.trim();
+            if (!t) return showAdminError("请输入密码");
             setToken(t);
-            tokenError.classList.remove("show");
-            try {
-                await apiGet("");
-                hideTokenGate();
-                render();
-            } catch (err) {
-                clearToken();
-                if (err.message === "Unauthorized") {
-                    showTokenError("密码不正确");
-                } else {
-                    showTokenError("连接失败: " + err.message);
-                }
-            }
+            hideAdminLogin();
+            if (adminResolve) adminResolve(true);
         });
+        document.getElementById("adminCancel").onclick = () => {
+            hideAdminLogin();
+            if (adminResolve) adminResolve(false);
+        };
+
+        function refreshAdminFab() {
+            if (isAdmin()) {
+                adminFab.classList.add("logged");
+                adminFabText.textContent = "管理员已登录 ✓";
+            } else {
+                adminFab.classList.remove("logged");
+                adminFabText.textContent = "🔑 管理员登录";
+            }
+        }
+        adminFab.onclick = async () => {
+            if (isAdmin()) {
+                if (confirm("退出管理员登录？")) {
+                    clearToken();
+                    refreshAdminFab();
+                }
+            } else {
+                await showAdminLogin();
+                refreshAdminFab();
+            }
+        };
+
+        async function requireAdmin() {
+            if (isAdmin()) return true;
+            await showAdminLogin();
+            return isAdmin();
+        }
 
         // ============================================
         // 路由
@@ -448,12 +493,13 @@
         document.getElementById("confirmOk").onclick = async () => {
             if (pendingDeleteId != null) {
                 try {
-                    await apiSend("DELETE", "/" + encodeURIComponent(pendingDeleteId));
+                    await apiWrite("DELETE", "/" + encodeURIComponent(pendingDeleteId));
                     document.getElementById("confirmModal").classList.remove("show");
                     goList();
                 } catch (err) {
-                    if (err.message === "Unauthorized") {
-                        showTokenGate();
+                    if (err.message === "NEED_LOGIN") {
+                        await showAdminLogin();
+                        refreshAdminFab();
                     } else {
                         alert("删除失败: " + err.message);
                     }
@@ -478,7 +524,6 @@
                 const data = await apiGet("/entries/" + encodeURIComponent(id));
                 e = data.entry;
             } catch (err) {
-                if (err.message === "Unauthorized") return showTokenGate();
                 alert("加载失败: " + err.message);
                 goList();
                 return;
@@ -504,18 +549,28 @@
                         <span>最后编辑：${escapeHtml(fmtLastUpdate(e.updatedAt))}</span>
                     </div>
                     <div class="detail-content">${html}</div>
-                    <div class="detail-actions">
-                        <button class="btn btn-ghost btn-sm" id="detailEdit">✏️ 编辑</button>
-                        <button class="btn btn-danger btn-sm" id="detailDelete">🗑️ 删除</button>
-                    </div>
+                    <div class="detail-actions" id="detailActions"></div>
                 </article>
             `;
             document.getElementById("backLink").onclick = goList;
-            document.getElementById("detailEdit").onclick = () => goEdit(e.id);
-            document.getElementById("detailDelete").onclick = () => confirmDelete(e);
+            // 只在登录时显示编辑/删除按钮
+            if (isAdmin()) {
+                const actions = document.getElementById("detailActions");
+                actions.innerHTML = `
+                    <button class="btn btn-ghost btn-sm" id="detailEdit">✏️ 编辑</button>
+                    <button class="btn btn-danger btn-sm" id="detailDelete">🗑️ 删除</button>
+                `;
+                document.getElementById("detailEdit").onclick = () => goEdit(e.id);
+                document.getElementById("detailDelete").onclick = () => confirmDelete(e);
+            }
         }
 
         async function renderEditor(opts = {}) {
+            // 编辑视图需要登录
+            if (!await requireAdmin()) {
+                goList();
+                return;
+            }
             const isEdit = !!opts.editId;
             const today = new Date().toISOString().slice(0, 10);
             let existing = null;
@@ -524,7 +579,6 @@
                     const data = await apiGet("/entries/" + encodeURIComponent(opts.editId));
                     existing = data.entry;
                 } catch (err) {
-                    if (err.message === "Unauthorized") return showTokenGate();
                     alert("加载失败: " + err.message);
                     goList();
                     return;
@@ -601,14 +655,15 @@
                 }
                 try {
                     if (existing) {
-                        await apiSend("PUT", "/" + encodeURIComponent(existing.id), data);
+                        await apiWrite("PUT", "/" + encodeURIComponent(existing.id), data);
                     } else {
-                        await apiSend("POST", "", data);
+                        await apiWrite("POST", "", data);
                     }
                     go(`./diary-detail.html?id=${encodeURIComponent(data.id)}`);
                 } catch (err) {
-                    if (err.message === "Unauthorized") {
-                        showTokenGate();
+                    if (err.message === "NEED_LOGIN") {
+                        await showAdminLogin();
+                        refreshAdminFab();
                     } else {
                         alert("保存失败: " + err.message);
                     }
@@ -618,8 +673,7 @@
         }
 
         async function render() {
-            if (!getToken()) { showTokenGate(); return; }
-            hideTokenGate();
+            refreshAdminFab();
             const q = getQuery();
             if (q.edit) await renderEditor({ editId: q.edit });
             else if (q.new) await renderEditor({});
@@ -634,6 +688,9 @@
             if (e.key === "Escape") {
                 if (document.getElementById("confirmModal").classList.contains("show")) {
                     document.getElementById("confirmCancel").click();
+                }
+                if (adminModal.classList.contains("show")) {
+                    document.getElementById("adminCancel").click();
                 }
             }
         });
