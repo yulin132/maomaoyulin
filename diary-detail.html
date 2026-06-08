@@ -185,6 +185,41 @@
         .editor-actions .left { display: flex; gap: 10px; }
         .editor-actions .right { display: flex; gap: 10px; }
 
+        /* Token gate */
+        .token-overlay {
+            position: fixed; inset: 0; z-index: 200;
+            display: flex; align-items: center; justify-content: center;
+            padding: 24px;
+            background: rgba(125, 195, 149, 0.6);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+        }
+        .token-card {
+            background: var(--animal-card);
+            border-radius: var(--animal-radius-lg);
+            border: 1px solid var(--animal-border);
+            padding: 32px 36px; width: 100%; max-width: 380px;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+        .token-icon { font-size: 40px; margin-bottom: 6px; }
+        .token-title { font-size: 18px; font-weight: 800; color: var(--animal-text); margin: 0 0 6px; }
+        .token-desc { font-size: 13px; color: var(--animal-text-soft); line-height: 1.6; margin: 0 0 18px; }
+        .token-form { display: flex; flex-direction: column; gap: 10px; text-align: left; }
+        .token-form input {
+            width: 100%; font-family: inherit; font-size: 14px;
+            color: var(--animal-text); background: var(--animal-bg-soft);
+            border: 1.5px solid var(--animal-border);
+            border-radius: 12px; padding: 10px 14px;
+            outline: none;
+        }
+        .token-form input:focus { border-color: var(--animal-primary); background: #fff; }
+        .token-error {
+            font-size: 12px; color: #d35a55; background: #fde8e7;
+            padding: 6px 10px; border-radius: 8px;
+            display: none;
+        }
+        .token-error.show { display: block; }
+
         /* Modal */
         .modal-overlay {
             position: fixed; inset: 0; z-index: 110;
@@ -203,6 +238,18 @@
         .modal-title { font-size: 17px; font-weight: 800; color: var(--animal-text); margin: 0 0 8px; }
         .modal-desc { font-size: 13px; color: var(--animal-text-soft); line-height: 1.6; margin: 0 0 22px; }
         .modal-actions { display: flex; gap: 10px; justify-content: center; }
+
+        /* Loading */
+        .loading-card {
+            background: var(--animal-card);
+            border-radius: var(--animal-radius-lg);
+            border: 1px solid var(--animal-border);
+            padding: 80px 24px;
+            text-align: center; color: var(--animal-text-soft);
+            box-shadow: var(--animal-shadow);
+        }
+        .loading-icon { font-size: 56px; display: inline-block; animation: spin 1.4s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
         /* Footer */
         .footer { padding: 32px 40px; text-align: center; font-size: 12px; color: rgba(255, 249, 230, 0.9); text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); }
@@ -226,6 +273,20 @@
         <a href="./diary.html" class="active">🌿 读研日记</a>
     </nav>
 
+    <!-- Token gate -->
+    <div class="token-overlay" id="tokenOverlay" style="display: none;">
+        <div class="token-card">
+            <div class="token-icon">🔑</div>
+            <h2 class="token-title">输入访问密码</h2>
+            <p class="token-desc">需要密码才能查看/编辑日记。</p>
+            <form class="token-form" id="tokenForm">
+                <input type="password" id="tokenInput" placeholder="访问密码" autocomplete="off" />
+                <button type="submit" class="btn btn-primary" style="width: 100%;">进入</button>
+                <div class="token-error" id="tokenError"></div>
+            </form>
+        </div>
+    </div>
+
     <!-- Delete confirm -->
     <div class="modal-overlay" id="confirmModal">
         <div class="modal-card">
@@ -239,7 +300,10 @@
     </div>
 
     <div class="view-wrap" id="viewWrap">
-        <!-- 内容由 JS 渲染 -->
+        <div class="loading-card">
+            <span class="loading-icon">🌿</span>
+            <div style="margin-top: 12px; font-weight: 700; color: var(--animal-text);">加载中...</div>
+        </div>
     </div>
 
     <footer class="footer">
@@ -248,14 +312,50 @@
             <a class="footer-link" href="./diary.html">读研日记</a>
             <a class="footer-link" href="mailto:1329106053@qq.com">Email</a>
         </div>
-        <div>© 2026 maomaoyulin · 本地存储</div>
+        <div>© 2026 maomaoyulin · Cloudflare D1 同步</div>
     </footer>
 
     <script>
         // ============================================
-        // 存储：日记直接明文存 localStorage
+        // Token
         // ============================================
-        const ENTRIES_KEY = "diary:entries";
+        const TOKEN_KEY = "diary:token";
+        function getToken() { return localStorage.getItem(TOKEN_KEY) || ""; }
+        function setToken(t) { localStorage.setItem(TOKEN_KEY, t); }
+        function clearToken() { localStorage.removeItem(TOKEN_KEY); }
+
+        // ============================================
+        // API
+        // ============================================
+        const API_BASE = "/api";
+        async function apiGet(path = "") {
+            const r = await fetch(API_BASE + "/entries" + path, {
+                headers: { Authorization: "Bearer " + getToken() },
+            });
+            if (r.status === 401) throw new Error("Unauthorized");
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            return r.json();
+        }
+        async function apiSend(method, path, body) {
+            const r = await fetch(API_BASE + "/entries" + path, {
+                method,
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + getToken(),
+                },
+                body: body ? JSON.stringify(body) : undefined,
+            });
+            if (r.status === 401) throw new Error("Unauthorized");
+            if (!r.ok) {
+                const t = await r.text();
+                throw new Error(t || "HTTP " + r.status);
+            }
+            return r.json();
+        }
+
+        // ============================================
+        // 工具
+        // ============================================
         const CATEGORIES = {
             life:  { label: "生活日常", cls: "life"  },
             tech:  { label: "技术折腾", cls: "tech"  },
@@ -263,41 +363,6 @@
             food:  { label: "吃喝记录", cls: "food"  },
             other: { label: "其它",     cls: "other" },
         };
-        function getEntries() {
-            try { return JSON.parse(localStorage.getItem(ENTRIES_KEY) || "[]"); }
-            catch (e) { return []; }
-        }
-        function saveEntries(list) { localStorage.setItem(ENTRIES_KEY, JSON.stringify(list)); }
-        function getEntry(id) { return getEntries().find((e) => String(e.id) === String(id)); }
-        function upsertEntry(entry) {
-            const list = getEntries();
-            const i = list.findIndex((e) => String(e.id) === String(entry.id));
-            if (i >= 0) list[i] = entry;
-            else list.unshift(entry);
-            saveEntries(list);
-        }
-        function deleteEntry(id) {
-            saveEntries(getEntries().filter((e) => String(e.id) !== String(id)));
-        }
-
-        // ============================================
-        // 路由
-        // ============================================
-        function getQuery() {
-            const u = new URL(window.location.href);
-            return {
-                id:   u.searchParams.get("id"),
-                new:  u.searchParams.get("new") === "1",
-                edit: u.searchParams.get("edit"),
-            };
-        }
-        function go(path) { window.location.href = path; }
-        function goList() { go("./diary.html"); }
-        function goEdit(id) { go(`./diary-detail.html?edit=${encodeURIComponent(id)}`); }
-
-        // ============================================
-        // 工具
-        // ============================================
         function escapeHtml(s) {
             return String(s).replace(/[&<>"']/g, (c) => ({
                 "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
@@ -316,6 +381,58 @@
         }
 
         // ============================================
+        // Token gate
+        // ============================================
+        const tokenOverlay = document.getElementById("tokenOverlay");
+        const tokenForm = document.getElementById("tokenForm");
+        const tokenInput = document.getElementById("tokenInput");
+        const tokenError = document.getElementById("tokenError");
+
+        function showTokenGate() {
+            tokenOverlay.style.display = "flex";
+            setTimeout(() => tokenInput.focus(), 100);
+        }
+        function hideTokenGate() { tokenOverlay.style.display = "none"; }
+        function showTokenError(msg) {
+            tokenError.textContent = msg;
+            tokenError.classList.add("show");
+        }
+        tokenForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const t = tokenInput.value.trim();
+            if (!t) return showTokenError("请输入密码");
+            setToken(t);
+            tokenError.classList.remove("show");
+            try {
+                await apiGet("");
+                hideTokenGate();
+                render();
+            } catch (err) {
+                clearToken();
+                if (err.message === "Unauthorized") {
+                    showTokenError("密码不正确");
+                } else {
+                    showTokenError("连接失败: " + err.message);
+                }
+            }
+        });
+
+        // ============================================
+        // 路由
+        // ============================================
+        function getQuery() {
+            const u = new URL(window.location.href);
+            return {
+                id:   u.searchParams.get("id"),
+                new:  u.searchParams.get("new") === "1",
+                edit: u.searchParams.get("edit"),
+            };
+        }
+        function go(path) { window.location.href = path; }
+        function goList() { go("./diary.html"); }
+        function goEdit(id) { go(`./diary-detail.html?edit=${encodeURIComponent(id)}`); }
+
+        // ============================================
         // 删除确认
         // ============================================
         let pendingDeleteId = null;
@@ -328,12 +445,19 @@
             pendingDeleteId = null;
             document.getElementById("confirmModal").classList.remove("show");
         };
-        document.getElementById("confirmOk").onclick = () => {
+        document.getElementById("confirmOk").onclick = async () => {
             if (pendingDeleteId != null) {
-                deleteEntry(pendingDeleteId);
-                pendingDeleteId = null;
-                document.getElementById("confirmModal").classList.remove("show");
-                goList();
+                try {
+                    await apiSend("DELETE", "/" + encodeURIComponent(pendingDeleteId));
+                    document.getElementById("confirmModal").classList.remove("show");
+                    goList();
+                } catch (err) {
+                    if (err.message === "Unauthorized") {
+                        showTokenGate();
+                    } else {
+                        alert("删除失败: " + err.message);
+                    }
+                }
             }
         };
 
@@ -342,8 +466,23 @@
         // ============================================
         const viewWrap = document.getElementById("viewWrap");
 
-        function renderDetail(id) {
-            const e = getEntry(id);
+        async function renderDetail(id) {
+            viewWrap.innerHTML = `
+                <div class="loading-card">
+                    <span class="loading-icon">🌿</span>
+                    <div style="margin-top: 12px; font-weight: 700; color: var(--animal-text);">加载中...</div>
+                </div>
+            `;
+            let e;
+            try {
+                const data = await apiGet("/entries/" + encodeURIComponent(id));
+                e = data.entry;
+            } catch (err) {
+                if (err.message === "Unauthorized") return showTokenGate();
+                alert("加载失败: " + err.message);
+                goList();
+                return;
+            }
             if (!e) {
                 alert("这篇日记不存在或已被删除");
                 goList();
@@ -376,10 +515,26 @@
             document.getElementById("detailDelete").onclick = () => confirmDelete(e);
         }
 
-        function renderEditor(opts = {}) {
+        async function renderEditor(opts = {}) {
             const isEdit = !!opts.editId;
-            const existing = isEdit ? getEntry(opts.editId) : null;
             const today = new Date().toISOString().slice(0, 10);
+            let existing = null;
+            if (isEdit) {
+                try {
+                    const data = await apiGet("/entries/" + encodeURIComponent(opts.editId));
+                    existing = data.entry;
+                } catch (err) {
+                    if (err.message === "Unauthorized") return showTokenGate();
+                    alert("加载失败: " + err.message);
+                    goList();
+                    return;
+                }
+                if (!existing) {
+                    alert("这篇日记不存在或已被删除");
+                    goList();
+                    return;
+                }
+            }
             viewWrap.innerHTML = `
                 <a class="back-link" id="backLink">← ${isEdit && existing ? "返回详情" : "返回列表"}</a>
                 <form class="editor-card" id="editorForm">
@@ -414,12 +569,11 @@
                         </div>
                         <div class="right">
                             <button type="button" class="btn btn-danger btn-sm" id="editorDelete" style="${isEdit ? "" : "display: none;"}">🗑️ 删除</button>
-                            <button type="submit" class="btn btn-primary btn-sm">💾 保存</button>
+                            <button type="submit" class="btn btn-primary btn-sm" id="editorSave">💾 保存</button>
                         </div>
                     </div>
                 </form>
             `;
-            // 设置 select 选中
             const cat = existing ? (existing.category || "life") : "life";
             document.getElementById("fCategory").value = cat;
 
@@ -430,33 +584,46 @@
             if (isEdit && existing) {
                 document.getElementById("editorDelete").onclick = () => confirmDelete(existing);
             }
-            document.getElementById("editorForm").onsubmit = (ev) => {
+            document.getElementById("editorForm").onsubmit = async (ev) => {
                 ev.preventDefault();
-                const now = Date.now();
                 const data = {
-                    id:        existing ? existing.id : now,
+                    id:        existing ? existing.id : Date.now(),
                     date:      document.getElementById("fDate").value || today,
                     category:  document.getElementById("fCategory").value,
                     title:     document.getElementById("fTitle").value.trim(),
                     content:   document.getElementById("fContent").value.trim(),
-                    createdAt: existing ? (existing.createdAt || now) : now,
-                    updatedAt: now,
+                    createdAt: existing ? existing.createdAt : Date.now(),
+                    updatedAt: Date.now(),
                 };
                 if (!data.title || !data.content) {
                     alert("标题和正文都不能空");
                     return;
                 }
-                upsertEntry(data);
-                go(`./diary-detail.html?id=${encodeURIComponent(data.id)}`);
+                try {
+                    if (existing) {
+                        await apiSend("PUT", "/" + encodeURIComponent(existing.id), data);
+                    } else {
+                        await apiSend("POST", "", data);
+                    }
+                    go(`./diary-detail.html?id=${encodeURIComponent(data.id)}`);
+                } catch (err) {
+                    if (err.message === "Unauthorized") {
+                        showTokenGate();
+                    } else {
+                        alert("保存失败: " + err.message);
+                    }
+                }
             };
             setTimeout(() => document.getElementById("fTitle").focus(), 50);
         }
 
-        function render() {
+        async function render() {
+            if (!getToken()) { showTokenGate(); return; }
+            hideTokenGate();
             const q = getQuery();
-            if (q.edit) renderEditor({ editId: q.edit });
-            else if (q.new) renderEditor({});
-            else if (q.id) renderDetail(q.id);
+            if (q.edit) await renderEditor({ editId: q.edit });
+            else if (q.new) await renderEditor({});
+            else if (q.id) await renderDetail(q.id);
             else goList();
         }
 

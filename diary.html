@@ -107,6 +107,11 @@
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); font-weight: 600;
         }
         .toolbar-info b { color: #fff9e6; }
+        .toolbar-link {
+            font-size: 12px; color: rgba(255, 249, 230, 0.85);
+            cursor: pointer; text-decoration: underline;
+        }
+        .toolbar-link:hover { color: #fff; }
 
         .btn {
             display: inline-flex; align-items: center; gap: 6px;
@@ -168,17 +173,54 @@
         .cat-chip.other { background: #ece6f5; color: #8870c4; }
         .read-more { font-size: 13px; font-weight: 700; color: var(--animal-primary); }
 
-        /* Empty */
-        .empty {
+        /* Empty / Loading */
+        .empty, .loading {
             text-align: center; padding: 80px 24px;
             background: var(--animal-card);
             border: 2px dashed var(--animal-border);
             border-radius: var(--animal-radius-lg);
             color: var(--animal-text-soft);
         }
-        .empty-icon { font-size: 56px; margin-bottom: 12px; }
+        .empty-icon, .loading-icon { font-size: 56px; margin-bottom: 12px; }
         .empty-title { font-size: 17px; font-weight: 800; color: var(--animal-text); margin-bottom: 6px; }
         .empty-desc  { font-size: 13px; line-height: 1.7; margin-bottom: 18px; }
+        .loading-icon { animation: spin 1.4s linear infinite; display: inline-block; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Token gate */
+        .token-overlay {
+            position: fixed; inset: 0; z-index: 200;
+            display: flex; align-items: center; justify-content: center;
+            padding: 24px;
+            background: rgba(125, 195, 149, 0.6);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+        }
+        .token-card {
+            background: var(--animal-card);
+            border-radius: var(--animal-radius-lg);
+            border: 1px solid var(--animal-border);
+            padding: 32px 36px; width: 100%; max-width: 380px;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+        .token-icon { font-size: 40px; margin-bottom: 6px; }
+        .token-title { font-size: 18px; font-weight: 800; color: var(--animal-text); margin: 0 0 6px; }
+        .token-desc { font-size: 13px; color: var(--animal-text-soft); line-height: 1.6; margin: 0 0 18px; }
+        .token-form { display: flex; flex-direction: column; gap: 10px; text-align: left; }
+        .token-form input {
+            width: 100%; font-family: inherit; font-size: 14px;
+            color: var(--animal-text); background: var(--animal-bg-soft);
+            border: 1.5px solid var(--animal-border);
+            border-radius: 12px; padding: 10px 14px;
+            outline: none;
+        }
+        .token-form input:focus { border-color: var(--animal-primary); background: #fff; }
+        .token-error {
+            font-size: 12px; color: #d35a55; background: #fde8e7;
+            padding: 6px 10px; border-radius: 8px;
+            display: none;
+        }
+        .token-error.show { display: block; }
 
         /* Footer */
         .footer { padding: 32px 40px; text-align: center; font-size: 12px; color: rgba(255, 249, 230, 0.9); text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); }
@@ -201,22 +243,40 @@
         <a href="./diary.html" class="active">🌿 读研日记</a>
     </nav>
 
+    <!-- Token gate -->
+    <div class="token-overlay" id="tokenOverlay">
+        <div class="token-card">
+            <div class="token-icon">🔑</div>
+            <h2 class="token-title">输入访问密码</h2>
+            <p class="token-desc">日记同步到云端，需要密码才能访问。<br />密码在 Cloudflare 后台设置，告诉过你的那个人知道。</p>
+            <form class="token-form" id="tokenForm">
+                <input type="password" id="tokenInput" placeholder="访问密码" autocomplete="off" />
+                <button type="submit" class="btn btn-primary" style="width: 100%;">进入日记</button>
+                <div class="token-error" id="tokenError"></div>
+            </form>
+        </div>
+    </div>
+
     <div class="page-hero">
         <div class="page-hero-eyebrow">
             <span>📖</span> MY DIARY · 读研记录
         </div>
         <h1 class="page-hero-title">读研记录</h1>
         <p class="page-hero-subtitle">
-            记录读研路上零零碎碎的想法、读到的论文、踩过的坑、和偶尔的好天气。
+            记录读研路上零零碎碎的想法、读到的论文、踩过的坑、和偶尔的好天气。<br />
+            <small style="opacity: 0.85;">云端同步 · 多设备实时共享</small>
         </p>
     </div>
 
-    <div class="toolbar">
+    <div class="toolbar" id="toolbar" style="display: none;">
         <div class="toolbar-info">
             共 <b id="entryCount">0</b> 篇 ·
             最近更新 <b id="lastUpdate">--</b>
         </div>
-        <button class="btn btn-primary btn-sm" id="btnNew">✏️ 写新日记</button>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <span class="toolbar-link" id="btnChangeToken">更换密码</span>
+            <button class="btn btn-primary btn-sm" id="btnNew">✏️ 写新日记</button>
+        </div>
     </div>
 
     <div class="list" id="entryList"></div>
@@ -227,14 +287,55 @@
             <a class="footer-link" href="./diary.html">读研日记</a>
             <a class="footer-link" href="mailto:1329106053@qq.com">Email</a>
         </div>
-        <div>© 2026 maomaoyulin · 本地存储</div>
+        <div>© 2026 maomaoyulin · Cloudflare D1 同步</div>
     </footer>
 
     <script>
         // ============================================
-        // 存储：日记直接明文存 localStorage
+        // Token 管理
         // ============================================
-        const ENTRIES_KEY = "diary:entries";
+        const TOKEN_KEY = "diary:token";
+        function getToken() { return localStorage.getItem(TOKEN_KEY) || ""; }
+        function setToken(t) { localStorage.setItem(TOKEN_KEY, t); }
+        function clearToken() { localStorage.removeItem(TOKEN_KEY); }
+
+        // ============================================
+        // API 封装
+        // ============================================
+        const API_BASE = "/api";
+        async function apiGet(path = "") {
+            const r = await fetch(API_BASE + "/entries" + path, {
+                headers: { Authorization: "Bearer " + getToken() },
+            });
+            if (r.status === 401) throw new Error("Unauthorized");
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            return r.json();
+        }
+        async function apiSend(method, path, body) {
+            const r = await fetch(API_BASE + "/entries" + path, {
+                method,
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + getToken(),
+                },
+                body: body ? JSON.stringify(body) : undefined,
+            });
+            if (r.status === 401) throw new Error("Unauthorized");
+            if (!r.ok) {
+                const t = await r.text();
+                throw new Error(t || "HTTP " + r.status);
+            }
+            return r.json();
+        }
+
+        // ============================================
+        // 状态
+        // ============================================
+        let allEntries = [];
+
+        // ============================================
+        // 工具
+        // ============================================
         const CATEGORIES = {
             life:  { label: "生活日常", cls: "life"  },
             tech:  { label: "技术折腾", cls: "tech"  },
@@ -242,18 +343,6 @@
             food:  { label: "吃喝记录", cls: "food"  },
             other: { label: "其它",     cls: "other" },
         };
-        function getEntries() {
-            try { return JSON.parse(localStorage.getItem(ENTRIES_KEY) || "[]"); }
-            catch (e) { return []; }
-        }
-
-        // ============================================
-        // 列表渲染
-        // ============================================
-        const entryList = document.getElementById("entryList");
-        const entryCount = document.getElementById("entryCount");
-        const lastUpdate = document.getElementById("lastUpdate");
-
         function fmtDate(iso) {
             const d = new Date(iso + "T00:00:00");
             const MONTHS = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
@@ -275,8 +364,91 @@
             }[c]));
         }
 
+        // ============================================
+        // Token gate
+        // ============================================
+        const tokenOverlay = document.getElementById("tokenOverlay");
+        const tokenForm = document.getElementById("tokenForm");
+        const tokenInput = document.getElementById("tokenInput");
+        const tokenError = document.getElementById("tokenError");
+
+        function showTokenGate() {
+            tokenOverlay.style.display = "flex";
+            document.getElementById("toolbar").style.display = "none";
+            setTimeout(() => tokenInput.focus(), 100);
+        }
+        function hideTokenGate() {
+            tokenOverlay.style.display = "none";
+            document.getElementById("toolbar").style.display = "";
+        }
+        function showTokenError(msg) {
+            tokenError.textContent = msg;
+            tokenError.classList.add("show");
+        }
+        tokenForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const t = tokenInput.value.trim();
+            if (!t) return showTokenError("请输入密码");
+            setToken(t);
+            tokenError.classList.remove("show");
+            try {
+                const data = await apiGet("");
+                allEntries = data.entries || [];
+                hideTokenGate();
+                render();
+            } catch (err) {
+                clearToken();
+                if (err.message === "Unauthorized") {
+                    showTokenError("密码不正确");
+                } else {
+                    showTokenError("连接失败: " + err.message);
+                }
+            }
+        });
+        document.getElementById("btnChangeToken").onclick = () => {
+            clearToken();
+            tokenInput.value = "";
+            tokenError.classList.remove("show");
+            showTokenGate();
+        };
+
+        // ============================================
+        // 渲染
+        // ============================================
+        const entryList = document.getElementById("entryList");
+        const entryCount = document.getElementById("entryCount");
+        const lastUpdate = document.getElementById("lastUpdate");
+
+        async function loadEntries() {
+            entryList.innerHTML = `
+                <div class="loading">
+                    <span class="loading-icon">🌿</span>
+                    <div class="empty-title">加载中...</div>
+                </div>
+            `;
+            try {
+                const data = await apiGet("");
+                allEntries = data.entries || [];
+                render();
+            } catch (err) {
+                if (err.message === "Unauthorized") {
+                    showTokenGate();
+                    entryList.innerHTML = "";
+                } else {
+                    entryList.innerHTML = `
+                        <div class="empty">
+                            <div class="empty-icon">⚠️</div>
+                            <div class="empty-title">加载失败</div>
+                            <div class="empty-desc">${escapeHtml(err.message)}</div>
+                            <button class="btn btn-primary btn-sm" onclick="loadEntries()">🔄 重试</button>
+                        </div>
+                    `;
+                }
+            }
+        }
+
         function render() {
-            const entries = getEntries().sort((a, b) =>
+            const entries = allEntries.slice().sort((a, b) =>
                 (b.date || "").localeCompare(a.date || "") ||
                 (b.updatedAt || 0) - (a.updatedAt || 0)
             );
@@ -289,10 +461,7 @@
                     <div class="empty">
                         <div class="empty-icon">🌱</div>
                         <div class="empty-title">还没有日记</div>
-                        <div class="empty-desc">
-                            点击右上角「写新日记」开始记录。<br />
-                            所有内容都只存在你本地浏览器。
-                        </div>
+                        <div class="empty-desc">点击右上角「写新日记」开始记录。</div>
                         <button class="btn btn-primary btn-sm" onclick="window.location.href='./diary-detail.html?new=1'">✏️ 写第一篇</button>
                     </div>
                 `;
@@ -325,7 +494,15 @@
             window.location.href = "./diary-detail.html?new=1";
         };
 
-        render();
+        // ============================================
+        // 启动
+        // ============================================
+        if (getToken()) {
+            hideTokenGate();
+            loadEntries();
+        } else {
+            showTokenGate();
+        }
     </script>
 </body>
 </html>
