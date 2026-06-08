@@ -7,13 +7,16 @@
     <title>读研日记 · maomaoyulin</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Noto+Sans+SC:wght@400;500;700&display=swap"
-        rel="stylesheet"
-    />
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+ <link
+ href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Noto+Sans+SC:wght@400;500;700&display=swap"
+ rel="stylesheet"
+ />
+ <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+ <meta http-equiv="Pragma" content="no-cache" />
+ <meta http-equiv="Expires" content="0" />
 
-    <style>
+ <style>
         :root {
             --animal-primary: #19c8b9;
             --animal-primary-dark: #0fa395;
@@ -342,14 +345,24 @@
         function isAdmin() { return !!getToken(); }
 
         // ============================================
-        // API
-        // ============================================
-        const API_BASE = "/api";
-        async function apiGet(path = "") {
-            const r = await fetch(API_BASE + "/entries" + path);
-            if (!r.ok) throw new Error("HTTP " + r.status);
-            return r.json();
-        }
+ // API
+ // ============================================
+ const API_BASE = "/api";
+ async function apiGet(path = "") {
+ const url = API_BASE + "/entries" + path;
+ let r;
+ try {
+ r = await fetch(url, { cache: "no-store" });
+ } catch (netErr) {
+ throw new Error("网络失败：" + netErr.message);
+ }
+ if (!r.ok) {
+ let body = "";
+ try { body = await r.text(); } catch (_) {}
+ throw new Error("HTTP " + r.status + (body ? " · " + body.slice(0,120) : ""));
+ }
+ return r.json();
+ }
         async function apiWrite(method, path, body) {
             if (!isAdmin()) throw new Error("NEED_LOGIN");
             const r = await fetch(API_BASE + "/entries" + path, {
@@ -513,27 +526,25 @@
         const viewWrap = document.getElementById("viewWrap");
 
         async function renderDetail(id) {
-            viewWrap.innerHTML = `
-                <div class="loading-card">
-                    <span class="loading-icon">🌿</span>
-                    <div style="margin-top: 12px; font-weight: 700; color: var(--animal-text);">加载中...</div>
-                </div>
-            `;
-            let e;
-            try {
-                const data = await apiGet("/entries/" + encodeURIComponent(id));
-                e = data.entry;
-            } catch (err) {
-                alert("加载失败: " + err.message);
-                goList();
-                return;
-            }
-            if (!e) {
-                alert("这篇日记不存在或已被删除");
-                goList();
-                return;
-            }
-            const cat = CATEGORIES[e.category] || CATEGORIES.other;
+ viewWrap.innerHTML = `
+ <div class="loading-card">
+ <span class="loading-icon">🌿</span>
+ <div style="margin-top:12px; font-weight:700; color: var(--animal-text);">加载中...</div>
+ </div>
+ `;
+ let e;
+ try {
+ const data = await apiGet("/entries/" + encodeURIComponent(id));
+ e = data.entry;
+ } catch (err) {
+ showFatal("加载失败", err.message, id);
+ return;
+ }
+  if (!e) {
+ showFatal("找不到这篇日记", "后端返回了空 entry。可能 ID 不存在，或 Cloudflare D1还没写入。", id);
+ return;
+ }
+ const cat = CATEGORIES[e.category] || CATEGORIES.other;
             const content = (e.content || "").trim();
             const paragraphs = content.split(/\n\s*\n/).filter(Boolean);
             const html = paragraphs.length > 0
@@ -673,13 +684,48 @@
         }
 
         async function render() {
-            refreshAdminFab();
-            const q = getQuery();
-            if (q.edit) await renderEditor({ editId: q.edit });
-            else if (q.new) await renderEditor({});
-            else if (q.id) await renderDetail(q.id);
-            else goList();
-        }
+ refreshAdminFab();
+ const q = getQuery();
+ if (q.edit) await renderEditor({ editId: q.edit });
+ else if (q.new) await renderEditor({});
+ else if (q.id) await renderDetail(q.id);
+ else goList();
+ }
+
+ //失败页：在页面里直接显示错误 +硬刷新按钮，方便排查缓存/网络
+ function showFatal(title, detail, id) {
+ const apiUrl = `/api/entries/${encodeURIComponent(id || "")}`;
+ viewWrap.innerHTML = `
+ <a class="back-link" id="backLink">← 返回列表</a>
+ <article class="detail-card" style="text-align: center;">
+ <div style="font-size:40px; margin-bottom:8px;">⚠️</div>
+ <h1 class="detail-title" style="font-size:22px;">${escapeHtml(title)}</h1>
+ <p style="color: var(--animal-text-soft); margin:8px016px; line-height:1.7;">
+ ${escapeHtml(detail)}
+ </p>
+ <div style="font-size:12px; color: #a08060; background: var(--animal-bg-soft); padding:10px14px; border-radius:10px; margin-bottom:18px; word-break: break-all;">
+ 请求：<code>GET ${escapeHtml(apiUrl)}</code>
+ </div>
+ <p style="font-size:13px; color: var(--animal-text-soft); margin-bottom:18px;">
+ 💡 如果之前能进现在不行，多半是浏览器缓存了旧版 HTML。<br />
+ 按 <kbd style="background:#f0e8d8;padding:2px6px;border-radius:6px;font-size:12px;">Ctrl + F5</kbd>硬刷新即可。
+ </p>
+ <div class="detail-actions" style="justify-content: center;">
+ <a class="btn btn-ghost btn-sm" href="./diary.html">← 返回列表</a>
+ <button class="btn btn-primary btn-sm" id="hardReload">🔄硬刷新</button>
+ <button class="btn btn-ghost btn-sm" id="retryLoad">↻ 重试</button>
+ </div>
+ </article>
+ `;
+ document.getElementById("backLink").onclick = goList;
+ document.getElementById("hardReload").onclick = () => {
+ //绕过 HTTP缓存重新加载
+ const u = new URL(window.location.href);
+ u.searchParams.set("_", String(Date.now()));
+ window.location.replace(u.toString());
+ };
+ document.getElementById("retryLoad").onclick = () => render();
+ }
 
         render();
 
