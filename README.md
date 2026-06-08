@@ -57,22 +57,39 @@ npx serve personal-website -l 8080
 - 删除走确认弹窗（防误删）
 - 编辑保存后跳回详情页
 
-## 数据存储
+## 数据存储（Cloudflare D1 + Pages Functions）
 
-所有日记**明文存**在你浏览器的 `localStorage`，key 是 `diary:entries`：
+日记存在 **Cloudflare D1**（云端 SQLite），多设备实时同步。
 
-```js
-// 浏览器控制台粘贴就能看
-JSON.parse(localStorage.getItem('diary:entries'))
+### API 端点（`/api/entries`）
+- `GET /api/entries` — 列出所有
+- `POST /api/entries` — 创建
+- `GET /api/entries/:id` — 单篇
+- `PUT /api/entries/:id` — 更新
+- `DELETE /api/entries/:id` — 删除
 
-// 想清空
-localStorage.removeItem('diary:entries')
+### 鉴权
+所有 API 请求需要 `Authorization: Bearer <DIARY_TOKEN>` 头。
+Token 存在环境变量 `DIARY_TOKEN` 里；用户首次访问 diary 页面时输入，存到 localStorage `diary:token`。
+
+### Cloudflare 项目配置
+在 Pages 项目 Settings 里需要：
+1. **Bindings** → 添加 D1 binding：变量名 `DB`，数据库 `maomaoyulin-diary`
+2. **Variables and Secrets** → 添加 `DIARY_TOKEN`（Secret 类型）
+3. 跑建表 SQL（在 D1 Console）：
+
+```sql
+CREATE TABLE IF NOT EXISTS entries (
+  id          TEXT PRIMARY KEY,
+  date        TEXT NOT NULL,
+  category    TEXT NOT NULL DEFAULT 'life',
+  title       TEXT NOT NULL,
+  content     TEXT NOT NULL,
+  created_at  INTEGER NOT NULL,
+  updated_at  INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_entries_date ON entries(date DESC, updated_at DESC);
 ```
-
-⚠️ 注意：
-- 数据只在你**自己的浏览器**里，不会传到任何服务器
-- 但**清浏览器缓存 = 丢数据**，建议偶尔复制上面那条命令的输出当备份
-- 不要在公共电脑用
 
 ## git 回退
 
