@@ -62,6 +62,7 @@
             border: 1px solid rgba(232, 226, 214, 0.6);
             border-radius: 999px; padding: 6px;
             box-shadow: 0 4px 16px rgba(114, 93, 66, 0.1);
+            white-space: nowrap;
         }
         .top-nav a {
             display: inline-flex; align-items: center; gap: 6px;
@@ -260,12 +261,17 @@
             .date-block .day { font-size: 24px; }
             .admin-fab { bottom: 16px; right: 16px; }
         }
+        @media (max-width: 390px) {
+            .top-nav { top: 12px; gap: 2px; padding: 5px; }
+            .top-nav a { gap: 3px; padding: 5px 7px; font-size: 11px; }
+        }
     </style>
 </head>
 <body>
     <nav class="top-nav">
         <a href="./index.html">🏠 首页</a>
         <a href="./diary.html" class="active">🌿 读研日记</a>
+        <a href="./book-of-answers/">📖 答案之书</a>
     </nav>
 
     <!-- Admin login modal -->
@@ -316,6 +322,7 @@
         <div class="footer-links">
             <a class="footer-link" href="./index.html">首页</a>
             <a class="footer-link" href="./diary.html">读研日记</a>
+            <a class="footer-link" href="./book-of-answers/">答案之书</a>
             <a class="footer-link" href="mailto:1329106053@qq.com">Email</a>
         </div>
         <div>© 2026 maomaoyulin · 公开阅读 · Cloudflare D1</div>
