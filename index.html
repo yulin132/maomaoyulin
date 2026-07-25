@@ -200,9 +200,11 @@
 
         .hero-actions {
             display: flex;
-            gap: 16px;
+            gap: 12px;
             align-items: center;
+            flex-wrap: wrap;
         }
+        .hero-actions .btn { padding-inline: 17px; }
 
         .hero-avatar {
             text-align: center;
@@ -424,6 +426,129 @@
         }
 
         /* ============================================
+           Island Feature · 答案之书
+           ============================================ */
+        .island-feature {
+            display: grid;
+            grid-template-columns: minmax(220px, 0.8fr) minmax(300px, 1.2fr);
+            align-items: center;
+            gap: 36px;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 18% 18%, rgba(255,255,255,0.78), transparent 25%),
+                linear-gradient(135deg, #e6f9f6 0%, #fff9e6 78%);
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            border-radius: var(--animal-radius-lg);
+            padding: 34px 38px;
+            max-width: 760px;
+            margin: 0 auto;
+            box-shadow: var(--animal-shadow);
+            position: relative;
+        }
+        .island-feature::after {
+            content: "✦";
+            position: absolute;
+            right: 22px;
+            top: 16px;
+            color: rgba(25, 200, 185, 0.28);
+            font-size: 30px;
+            transform: rotate(12deg);
+        }
+        .oracle-art {
+            min-height: 220px;
+            display: grid;
+            place-items: center;
+            position: relative;
+        }
+        .oracle-art::before {
+            content: "";
+            position: absolute;
+            width: 210px;
+            height: 210px;
+            border-radius: 50%;
+            background: rgba(25, 200, 185, 0.12);
+            box-shadow: 0 0 0 18px rgba(255,255,255,0.3);
+        }
+        .oracle-book {
+            width: 142px;
+            height: 176px;
+            position: relative;
+            z-index: 1;
+            border-radius: 8px 18px 18px 8px;
+            background: #19c8b9;
+            border: 4px solid #fff9e6;
+            box-shadow: -9px 10px 0 #0fa395, 0 18px 28px rgba(114,93,66,0.2);
+            transform: rotate(-5deg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff9e6;
+        }
+        .oracle-book::before {
+            content: "";
+            position: absolute;
+            left: 11px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(255,249,230,0.55);
+        }
+        .oracle-book-star {
+            font-size: 38px;
+            line-height: 1;
+            text-shadow: 0 2px 0 rgba(15,163,149,0.8);
+        }
+        .oracle-book strong {
+            margin-top: 12px;
+            font-size: 16px;
+            letter-spacing: 0.08em;
+        }
+        .oracle-book small {
+            margin-top: 4px;
+            font-size: 8px;
+            letter-spacing: 0.16em;
+            opacity: 0.82;
+        }
+        .feature-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--animal-primary);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+        .feature-copy h3 {
+            margin: 0 0 10px;
+            color: var(--animal-text);
+            font-size: 25px;
+            line-height: 1.25;
+        }
+        .feature-copy p {
+            margin: 0 0 20px;
+            color: var(--animal-text-soft);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        .feature-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 0 0 22px;
+        }
+        .feature-meta span {
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.72);
+            color: var(--animal-text-soft);
+            font-size: 11px;
+            font-weight: 700;
+            border: 1px solid rgba(114,93,66,0.08);
+        }
+
+        /* ============================================
            Timeline
            ============================================ */
         .timeline {
@@ -580,6 +705,7 @@
             border-radius: 999px;
             padding: 6px;
             box-shadow: 0 4px 16px rgba(114, 93, 66, 0.1);
+            white-space: nowrap;
         }
         .top-nav a {
             display: inline-flex;
@@ -616,6 +742,20 @@
             .about-card { padding: 24px 20px; }
             .top-nav { top: 12px; font-size: 12px; }
             .top-nav a { padding: 5px 10px; }
+            .island-feature {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                padding: 26px 22px 28px;
+                text-align: center;
+            }
+            .oracle-art { min-height: 190px; }
+            .feature-meta { justify-content: center; }
+            .feature-copy .btn { width: 100%; }
+        }
+
+        @media (max-width: 390px) {
+            .top-nav { gap: 2px; padding: 5px; }
+            .top-nav a { gap: 3px; padding: 5px 7px; font-size: 11px; }
         }
     </style>
 </head>
@@ -624,6 +764,7 @@
     <nav class="top-nav">
         <a href="./index.html" class="active">🏠 首页</a>
         <a href="./diary.html">🌿 读研日记</a>
+        <a href="./book-of-answers/">📖 答案之书</a>
     </nav>
 
     <div class="page">
@@ -647,6 +788,9 @@
                     <div class="hero-actions">
                         <a class="btn btn-primary" href="./diary.html">
                             查看读研日记 →
+                        </a>
+                        <a class="btn btn-ghost" href="./book-of-answers/">
+                            ✦ 翻开答案之书
                         </a>
                         <a class="btn btn-ghost" href="#contact">
                             联系我
@@ -692,6 +836,39 @@
 
         <div class="divider"><span>🍃</span></div>
 
+        <!-- 岛上新玩法 -->
+        <section class="section" id="book-of-answers">
+            <h2 class="section-title">岛上新玩法</h2>
+            <p class="section-desc">A quiet answer for the question on your mind</p>
+            <article class="island-feature">
+                <div class="oracle-art" aria-hidden="true">
+                    <div class="oracle-book">
+                        <span class="oracle-book-star">✦</span>
+                        <strong>答案回响</strong>
+                        <small>THE BOOK OF ANSWERS</small>
+                    </div>
+                </div>
+                <div class="feature-copy">
+                    <span class="feature-kicker">📖 THE SACRED ORACLE</span>
+                    <h3>把问题交给一本书</h3>
+                    <p>
+                        写下此刻最想问的问题，从爱情、财富、事业、成长、选择与命运六本书中，
+                        翻开一页只属于你的答案。
+                    </p>
+                    <div class="feature-meta" aria-label="功能特点">
+                        <span>中英双语</span>
+                        <span>六本主题书</span>
+                        <span>收藏答案</span>
+                    </div>
+                    <a class="btn btn-primary" href="./book-of-answers/">
+                        开始提问 ✦
+                    </a>
+                </div>
+            </article>
+        </section>
+
+        <div class="divider"><span>🍃</span></div>
+
     
         <!-- 联系 -->
  <section class="section" id="contact">
@@ -720,6 +897,7 @@
             <div class="footer-links">
                 <a class="footer-link" href="./index.html">首页</a>
                 <a class="footer-link" href="./diary.html">读研日记</a>
+                <a class="footer-link" href="./book-of-answers/">答案之书</a>
                 <a class="footer-link" href="mailto:1329106053@qq.com">Email</a>
                 <a class="footer-link" href="https://github.com" target="_blank" rel="noopener">GitHub</a>
             </div>
