@@ -3495,6 +3495,47 @@ body {
   gap: clamp(24px, 4vw, 54px);
 }
 
+@media (min-width: 901px) {
+  .home-screen {
+    width: 100%;
+    max-width: none;
+  }
+
+  .home-screen .hero-copy {
+    width: min(1180px, calc(100% - 40px));
+    margin-inline: auto;
+  }
+
+  .home-content {
+    display: flex;
+    width: 100%;
+    max-width: none;
+    min-height: clamp(620px, 68vh, 780px);
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0;
+    padding: 0 clamp(44px, 6vw, 120px);
+  }
+
+  .home-book-stage {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    min-height: 100%;
+  }
+
+  .home-book-loop {
+    inset: -160px -80px -120px;
+  }
+
+  .question-card {
+    position: relative;
+    z-index: 6;
+    flex: 0 0 410px;
+    margin: 0;
+  }
+}
+
 .question-card {
   max-width: 410px;
   padding: 28px 26px;
