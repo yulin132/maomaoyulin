@@ -38,6 +38,8 @@
 
     let soundEnabled = true;
     let audioContext;
+    let isTransitioning = false;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     function playChime(type) {
         if (!soundEnabled) return;
@@ -78,7 +80,32 @@
         if (announce) playChime(view);
     }
 
-    doorButtons.forEach((button) => button.addEventListener("click", () => setView(button.dataset.open)));
+    function openCompartment(view) {
+        if (isTransitioning || !views[view]) return;
+        isTransitioning = true;
+        setInventoryOpen(false);
+        panel.classList.add("is-opening", `opening-${view}`);
+        panel.setAttribute("aria-busy", "true");
+        doorButtons.forEach((button) => { button.disabled = true; });
+        playChime(view);
+
+        const doorDuration = prefersReducedMotion.matches ? 30 : 760;
+        const zoomDuration = prefersReducedMotion.matches ? 30 : 520;
+
+        window.setTimeout(() => {
+            panel.classList.remove("is-opening");
+            setView(view, false);
+
+            window.setTimeout(() => {
+                panel.classList.remove(`opening-${view}`);
+                panel.removeAttribute("aria-busy");
+                doorButtons.forEach((button) => { button.disabled = false; });
+                isTransitioning = false;
+            }, zoomDuration);
+        }, doorDuration);
+    }
+
+    doorButtons.forEach((button) => button.addEventListener("click", () => openCompartment(button.dataset.open)));
     viewButtons.forEach((button) => button.addEventListener("click", () => setView(button.dataset.view)));
     backButton.addEventListener("click", () => setView("closed"));
     soundButton.addEventListener("click", () => {
