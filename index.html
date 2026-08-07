@@ -532,6 +532,63 @@
             font-size: 14px;
             line-height: 1.8;
         }
+
+        /* ============================================
+           Island Feature · 小岛冰箱
+           ============================================ */
+        .fridge-feature {
+            margin-top: 18px;
+            background:
+                radial-gradient(circle at 80% 18%, rgba(255,255,255,0.82), transparent 26%),
+                linear-gradient(135deg, #fff9e6 0%, #e6f9f6 78%);
+        }
+        .mini-fridge-art {
+            min-height: 220px;
+            display: grid;
+            place-items: center;
+            position: relative;
+        }
+        .mini-fridge-art::before {
+            content: "";
+            position: absolute;
+            width: 210px;
+            height: 210px;
+            border-radius: 50%;
+            background: rgba(25, 200, 185, 0.1);
+            box-shadow: 0 0 0 18px rgba(255,255,255,0.3);
+        }
+        .mini-fridge {
+            position: relative;
+            z-index: 1;
+            width: 112px;
+            height: 174px;
+            padding: 7px;
+            border: 4px solid #7f8b8c;
+            border-radius: 15px 15px 9px 9px;
+            background: #aab5b4;
+            box-shadow: 0 15px 23px rgba(114,93,66,0.2);
+            transform: rotate(3deg);
+        }
+        .mini-fridge span {
+            position: relative;
+            display: block;
+            border-radius: 8px 8px 3px 3px;
+            background: linear-gradient(110deg, #eef1ef, #b6c0bf);
+            box-shadow: inset -5px 0 7px rgba(83,93,94,.14);
+        }
+        .mini-fridge span:first-child { height: 96px; border-bottom: 3px solid #7f8b8c; }
+        .mini-fridge span:last-child { height: 59px; margin-top: 3px; border-radius: 3px 3px 6px 6px; }
+        .mini-fridge span::after {
+            content: "";
+            position: absolute;
+            right: 9px;
+            top: 13px;
+            width: 6px;
+            height: 34px;
+            border-radius: 5px;
+            background: #748081;
+        }
+        .mini-fridge span:last-child::after { height: 24px; }
         .feature-meta {
             display: flex;
             flex-wrap: wrap;
@@ -749,6 +806,7 @@
                 text-align: center;
             }
             .oracle-art { min-height: 190px; }
+            .mini-fridge-art { min-height: 190px; }
             .feature-meta { justify-content: center; }
             .feature-copy .btn { width: 100%; }
         }
@@ -765,6 +823,7 @@
         <a href="./index.html" class="active">🏠 首页</a>
         <a href="./diary.html">🌿 读研日记</a>
         <a href="./book-of-answers/">📖 答案之书</a>
+        <a href="./fridge.html">🧊 冰箱</a>
     </nav>
 
     <div class="page">
@@ -865,6 +924,22 @@
                     </a>
                 </div>
             </article>
+            <article class="island-feature fridge-feature">
+                <div class="mini-fridge-art" aria-hidden="true">
+                    <div class="mini-fridge"><span></span><span></span></div>
+                </div>
+                <div class="feature-copy">
+                    <span class="feature-kicker">🧊 NOOK HOME APPLIANCE</span>
+                    <h3>打开小岛冰箱</h3>
+                    <p>一台可以打开上下门的老式灰色冰箱。进入冷藏室和冷冻室，查看空置栏位，之后再慢慢把食材放进去。</p>
+                    <div class="feature-meta">
+                        <span>上下层互动</span>
+                        <span>食材栏位</span>
+                        <span>移动端适配</span>
+                    </div>
+                    <a class="btn btn-primary" href="./fridge.html">去看看冰箱 🧊</a>
+                </div>
+            </article>
         </section>
 
         <div class="divider"><span>🍃</span></div>
@@ -898,6 +973,7 @@
                 <a class="footer-link" href="./index.html">首页</a>
                 <a class="footer-link" href="./diary.html">读研日记</a>
                 <a class="footer-link" href="./book-of-answers/">答案之书</a>
+                <a class="footer-link" href="./fridge.html">小岛冰箱</a>
                 <a class="footer-link" href="mailto:1329106053@qq.com">Email</a>
                 <a class="footer-link" href="https://github.com" target="_blank" rel="noopener">GitHub</a>
             </div>

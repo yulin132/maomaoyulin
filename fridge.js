@@ -1,0 +1,97 @@
+(() => {
+    const panel = document.querySelector(".scene-panel");
+    const locationCode = document.getElementById("locationCode");
+    const locationTitle = document.getElementById("locationTitle");
+    const areaName = document.getElementById("areaName");
+    const temperature = document.getElementById("temperature");
+    const emptyMessage = document.getElementById("emptyMessage");
+    const backButton = document.querySelector(".back-button");
+    const soundButton = document.querySelector(".sound-button");
+    const viewButtons = [...document.querySelectorAll("[data-view]")];
+    const doorButtons = [...document.querySelectorAll("[data-open]")];
+
+    const views = {
+        closed: {
+            code: "FRIDGE 01",
+            title: "整台冰箱",
+            area: "全部",
+            temperature: "—",
+            message: "选择一个区域，之后这里会显示存放的食材。"
+        },
+        upper: {
+            code: "FRESH AREA",
+            title: "上层 · 冷藏室",
+            area: "冷藏室",
+            temperature: "2～8°C",
+            message: "冷藏室暂时没有记录，已为蔬菜、饮料和日常食材预留栏位。"
+        },
+        lower: {
+            code: "FROZEN AREA",
+            title: "下层 · 冷冻室",
+            area: "冷冻室",
+            temperature: "-18°C",
+            message: "三个冷冻抽屉都是空的，之后可以按抽屉记录冷冻食材。"
+        }
+    };
+
+    let soundEnabled = true;
+    let audioContext;
+
+    function playChime(type) {
+        if (!soundEnabled) return;
+        try {
+            audioContext ||= new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            oscillator.type = "sine";
+            oscillator.frequency.value = type === "closed" ? 360 : type === "upper" ? 620 : 470;
+            gain.gain.setValueAtTime(0.0001, audioContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.055, audioContext.currentTime + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.24);
+            oscillator.connect(gain).connect(audioContext.destination);
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.25);
+        } catch (_) {
+            // Audio is decorative; the fridge remains fully usable without it.
+        }
+    }
+
+    function setView(view, announce = true) {
+        if (!views[view]) return;
+        panel.dataset.view = view;
+        const data = views[view];
+        locationCode.textContent = data.code;
+        locationTitle.textContent = data.title;
+        areaName.textContent = data.area;
+        temperature.textContent = data.temperature;
+        emptyMessage.textContent = data.message;
+
+        document.getElementById("upperInterior").setAttribute("aria-hidden", String(view !== "upper"));
+        document.getElementById("lowerInterior").setAttribute("aria-hidden", String(view !== "lower"));
+
+        viewButtons.forEach((button) => {
+            const active = button.dataset.view === view;
+            button.classList.toggle("is-active", active);
+            button.setAttribute("aria-pressed", String(active));
+        });
+
+        if (announce) playChime(view);
+    }
+
+    doorButtons.forEach((button) => button.addEventListener("click", () => setView(button.dataset.open)));
+    viewButtons.forEach((button) => button.addEventListener("click", () => setView(button.dataset.view)));
+    backButton.addEventListener("click", () => setView("closed"));
+    soundButton.addEventListener("click", () => {
+        soundEnabled = !soundEnabled;
+        soundButton.setAttribute("aria-pressed", String(soundEnabled));
+        soundButton.textContent = soundEnabled ? "♪" : "×";
+        soundButton.title = `提示音：${soundEnabled ? "开" : "关"}`;
+        if (soundEnabled) playChime("upper");
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && panel.dataset.view !== "closed") setView("closed");
+    });
+
+    setView("closed", false);
+})();

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="maomaoyulin 的小岛冰箱，查看冷藏室与冷冻室。" />
+    <link rel="icon" href="./assets/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./fridge.css" />
+    <title>小岛冰箱 · maomaoyulin</title>
+</head>
+<body>
+    <nav class="top-nav" aria-label="个人网站导航">
+        <a href="./index.html">🏠 首页</a>
+        <a href="./diary.html">🌿 读研日记</a>
+        <a href="./book-of-answers/">📖 答案之书</a>
+        <a href="./fridge.html" class="active" aria-current="page">🧊 冰箱</a>
+    </nav>
+
+    <main class="fridge-page">
+        <header class="page-heading">
+            <span class="eyebrow"><i></i> NOOK HOME APPLIANCE <i></i></span>
+            <h1>小岛冰箱</h1>
+            <p>今天也要记得看看冰箱里还有什么。</p>
+        </header>
+
+        <section class="fridge-app" aria-live="polite">
+            <div class="scene-panel">
+                <div class="scene-toolbar">
+                    <button class="round-button back-button" type="button" aria-label="返回整台冰箱" title="返回整台冰箱">←</button>
+                    <div class="location-copy">
+                        <small id="locationCode">FRIDGE 01</small>
+                        <strong id="locationTitle">整台冰箱</strong>
+                    </div>
+                    <button class="round-button sound-button" type="button" aria-label="切换冰箱提示音" aria-pressed="true" title="提示音：开">♪</button>
+                </div>
+
+                <div class="fridge-stage" id="fridgeStage">
+                    <div class="floor-shadow" aria-hidden="true"></div>
+
+                    <div class="fridge-front" id="fridgeFront" aria-label="一台立式老式灰色双门冰箱">
+                        <button class="fridge-door upper-door" type="button" data-open="upper" aria-label="打开上层冷藏室">
+                            <span class="brand-badge">MAOMAO</span>
+                            <span class="door-note">小岛厨房<br /><small>记得补货!</small></span>
+                            <span class="door-handle"></span>
+                            <span class="door-label"><b>冷藏室</b><small>点击打开</small></span>
+                        </button>
+                        <button class="fridge-door lower-door" type="button" data-open="lower" aria-label="打开下层冷冻室">
+                            <span class="door-handle"></span>
+                            <span class="energy-sticker"><i>🍃</i><b>节能住民</b><small>ISLAND ECO</small></span>
+                            <span class="door-label"><b>冷冻室</b><small>点击打开</small></span>
+                        </button>
+                        <span class="fridge-foot foot-left"></span>
+                        <span class="fridge-foot foot-right"></span>
+                    </div>
+
+                    <div class="interior-view upper-interior" id="upperInterior" aria-hidden="true">
+                        <div class="cold-chamber">
+                            <div class="lamp"><span></span></div>
+                            <div class="thermostat"><span></span><span></span><span></span></div>
+                            <div class="glass-shelf shelf-one"></div>
+                            <div class="glass-shelf shelf-two"></div>
+                            <div class="crisper-drawer"><span>FRESH BOX</span></div>
+                        </div>
+                        <div class="door-liner">
+                            <div class="door-rack top-rack"></div>
+                            <div class="door-rack split-rack"><i></i></div>
+                            <div class="door-rack bottom-rack"></div>
+                        </div>
+                    </div>
+
+                    <div class="interior-view lower-interior" id="lowerInterior" aria-hidden="true">
+                        <div class="freezer-shell">
+                            <div class="frost-mark">❄</div>
+                            <div class="freezer-drawer"><span>FREEZER BOX · 01</span><i></i></div>
+                            <div class="freezer-drawer"><span>FREEZER BOX · 02</span><i></i></div>
+                            <div class="freezer-drawer"><span>FREEZER BOX · 03</span><i></i></div>
+                        </div>
+                    </div>
+
+                    <div class="stage-hint" id="stageHint">
+                        <span>👆</span>
+                        <p>点击上门或下门<br />看看里面吧</p>
+                    </div>
+                </div>
+
+                <div class="level-switch" role="group" aria-label="冰箱区域快速切换">
+                    <button type="button" class="level-button is-active" data-view="closed"><span>🏠</span>整台冰箱</button>
+                    <button type="button" class="level-button" data-view="upper"><span>🥬</span>上层冷藏</button>
+                    <button type="button" class="level-button" data-view="lower"><span>❄️</span>下层冷冻</button>
+                </div>
+            </div>
+
+            <aside class="inventory-panel">
+                <div class="inventory-heading">
+                    <span class="inventory-icon">🧺</span>
+                    <div>
+                        <small>MY FRIDGE LIST</small>
+                        <h2>冰箱里有什么</h2>
+                    </div>
+                    <span class="item-count" id="itemCount">0</span>
+                </div>
+
+                <div class="temperature-card">
+                    <div><span>当前区域</span><strong id="areaName">全部</strong></div>
+                    <div><span>建议温度</span><strong id="temperature">—</strong></div>
+                </div>
+
+                <div class="empty-inventory">
+                    <div class="empty-basket" aria-hidden="true"><span></span><i></i><i></i><i></i></div>
+                    <strong>冰箱还是空空的</strong>
+                    <p id="emptyMessage">选择一个区域，之后这里会显示存放的食材。</p>
+                </div>
+
+                <div class="future-slots" aria-label="预留的食材栏位">
+                    <div class="slot"><span>＋</span><small>栏位 01</small></div>
+                    <div class="slot"><span>＋</span><small>栏位 02</small></div>
+                    <div class="slot"><span>＋</span><small>栏位 03</small></div>
+                    <div class="slot"><span>＋</span><small>栏位 04</small></div>
+                </div>
+                <p class="inventory-note">第二阶段可在这里加入食材名称、数量与保质期。</p>
+            </aside>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div>
+            <a href="./index.html">首页</a>
+            <a href="./diary.html">读研日记</a>
+            <a href="./book-of-answers/">答案之书</a>
+            <a href="./fridge.html">小岛冰箱</a>
+        </div>
+        <p>© 2026 maomaoyulin · Keep it fresh 🧊</p>
+    </footer>
+
+    <script src="./fridge.js"></script>
+</body>
+</html>
