@@ -97,21 +97,21 @@ button { -webkit-tap-highlight-color: transparent; }
 .fridge-door:hover, .fridge-door:focus-visible { background: #8f9390; transform: translateY(-2px); outline: 4px solid rgba(255,249,230,.6); outline-offset: 3px; }
 .upper-door { height: 298px; border-radius: 15px 15px 8px 8px; }
 .lower-door { height: 124px; margin-top: 5px; border-radius: 8px 8px 11px 11px; }
-.door-handle { position: absolute; right: 17px; width: 15px; border: 3px solid #565b58; border-radius: 9px; background: #6a6f6c; box-shadow: -4px 5px 0 rgba(69,73,70,.2); }
+.door-handle { position: absolute; left: 17px; width: 15px; border: 3px solid #565b58; border-radius: 9px; background: #6a6f6c; box-shadow: 4px 5px 0 rgba(69,73,70,.2); }
 .upper-door .door-handle { bottom: 24px; height: 104px; }
 .lower-door .door-handle { top: 18px; height: 61px; }
 .leaf-magnet, .flower-magnet, .face-magnet { position: absolute; display: grid; place-items: center; border: 3px solid rgba(80,86,82,.3); border-radius: 50%; box-shadow: 2px 3px 0 rgba(67,72,68,.18); }
 .leaf-magnet { top: 29px; right: 43px; width: 38px; height: 38px; background: #bfe39c; font-size: 19px; transform: rotate(9deg); }
 .flower-magnet { top: 70px; right: 66px; width: 27px; height: 27px; background: #f8d985; font-size: 14px; transform: rotate(-8deg); }
-.face-magnet { left: 30px; bottom: 35px; width: 46px; height: 40px; border-radius: 45% 55% 50% 46%; color: #745d42; background: #9fded3; font-size: 15px; font-weight: 900; transform: rotate(-5deg); }
-.door-note { position: absolute; top: 71px; left: 50px; padding: 12px 15px 10px; border: 2px solid #d1ad55; border-radius: 8px 12px 9px 13px; color: #725d42; background: #ffe99b; box-shadow: 4px 5px 0 rgba(80,84,79,.17); font-size: 13px; font-weight: 900; line-height: 1.25; text-align: left; transform: rotate(-4deg); }
+.face-magnet { left: 92px; bottom: 35px; width: 46px; height: 40px; border-radius: 45% 55% 50% 46%; color: #745d42; background: #9fded3; font-size: 15px; font-weight: 900; transform: rotate(-5deg); }
+.door-note { position: absolute; top: 71px; left: 80px; padding: 12px 15px 10px; border: 2px solid #d1ad55; border-radius: 8px 12px 9px 13px; color: #725d42; background: #ffe99b; box-shadow: 4px 5px 0 rgba(80,84,79,.17); font-size: 13px; font-weight: 900; line-height: 1.25; text-align: left; transform: rotate(-4deg); }
 .door-note::before { content: ""; position: absolute; top: -7px; left: 36%; width: 34px; height: 12px; border-radius: 3px; background: rgba(255,249,230,.65); transform: rotate(4deg); }
 .door-note small { color: #9a7043; font-size: 9px; }
 .door-label { position: absolute; right: 44px; bottom: 18px; display: flex; flex-direction: column; align-items: flex-end; opacity: 0; transform: translateX(8px); transition: opacity 160ms ease, transform 160ms ease; }
 .lower-door .door-label { bottom: 13px; }
 .fridge-door:hover .door-label, .fridge-door:focus-visible .door-label { opacity: 1; transform: none; }
 .door-label b { font-size: 12px; }.door-label small { color: #dff7ee; font-size: 8px; }
-.energy-sticker { position: absolute; left: 30px; top: 27px; display: grid; grid-template-columns: 32px 1fr; grid-template-rows: auto auto; padding: 8px 11px; border: 2px solid #638d71; border-radius: 13px 9px 14px 10px; color: #55715b; background: #dbe9bf; text-align: left; transform: rotate(2deg); }
+.energy-sticker { position: absolute; right: 30px; top: 27px; display: grid; grid-template-columns: 32px 1fr; grid-template-rows: auto auto; padding: 8px 11px; border: 2px solid #638d71; border-radius: 13px 9px 14px 10px; color: #55715b; background: #dbe9bf; text-align: left; transform: rotate(2deg); }
 .energy-sticker i { grid-row: 1 / 3; align-self: center; font-style: normal; font-size: 22px; }
 .energy-sticker b { font-size: 9px; }.energy-sticker small { font-size: 6px; letter-spacing: .08em; }
 .fridge-foot { position: absolute; bottom: -14px; width: 31px; height: 16px; border-radius: 0 0 7px 7px; background: #4e5450; }
@@ -196,8 +196,8 @@ button { -webkit-tap-highlight-color: transparent; }
     .control-deck { height: 36px; padding-inline: 8px; }.deck-screen { font-size: 7px; }.deck-brand { font-size: 7px; }
     .upper-door { height: 244px; }.lower-door { height: 101px; }
     .upper-door .door-handle { height: 84px; }.lower-door .door-handle { height: 49px; }
-    .leaf-magnet { top: 22px; right: 39px; transform: scale(.86) rotate(9deg); }.flower-magnet { top: 56px; right: 59px; transform: scale(.86) rotate(-8deg); }.face-magnet { left: 23px; bottom: 27px; transform: scale(.86) rotate(-5deg); }
-    .door-note { top: 53px; left: 35px; padding: 10px 12px 8px; font-size: 11px; }.energy-sticker { left: 20px; top: 18px; transform: scale(.82) rotate(2deg); transform-origin: left top; }
+    .leaf-magnet { top: 22px; right: 39px; transform: scale(.86) rotate(9deg); }.flower-magnet { top: 56px; right: 59px; transform: scale(.86) rotate(-8deg); }.face-magnet { left: 75px; bottom: 27px; transform: scale(.86) rotate(-5deg); }
+    .door-note { top: 53px; left: 62px; padding: 10px 12px 8px; font-size: 11px; }.energy-sticker { right: 20px; top: 18px; transform: scale(.82) rotate(2deg); transform-origin: right top; }
     .stage-hint { right: 4px; bottom: 40px; }
     .upper-interior { grid-template-columns: minmax(210px, 1.5fr) minmax(105px, .7fr); gap: 7px; width: 96%; height: 430px; }.cold-chamber, .door-liner, .freezer-shell { border-width: 8px; }.lower-interior { width: 82%; height: 440px; }.freezer-shell { padding: 45px 18px 20px; }
     .level-switch { gap: 2px; }.level-button { gap: 3px; padding: 7px 8px; font-size: 10px; }
@@ -407,7 +407,7 @@ body { overflow-x: hidden; }
 
 .fridge-door {
     z-index: 3;
-    transform-origin: left center;
+    transform-origin: right center;
     transform-style: preserve-3d;
     backface-visibility: hidden;
     will-change: transform;
@@ -471,25 +471,43 @@ body { overflow-x: hidden; }
 .scene-panel.is-opening .fridge-front { transform: scale(1.055) translateY(-3px); }
 .scene-panel[aria-busy="true"] .back-button { opacity: 0; pointer-events: none; }
 .scene-panel.is-opening .fridge-door:not(:disabled) { pointer-events: none; }
-.scene-panel.opening-upper .upper-door { transform: perspective(900px) rotateY(-84deg) translateZ(5px); }
-.scene-panel.opening-lower .lower-door { transform: perspective(900px) rotateY(-84deg) translateZ(5px); }
-.scene-panel.is-opening.opening-upper .upper-door { animation: upper-door-open 760ms cubic-bezier(.16,.76,.2,1) forwards; }
-.scene-panel.is-opening.opening-lower .lower-door { animation: lower-door-open 760ms cubic-bezier(.16,.76,.2,1) forwards; }
+.scene-panel.opening-upper .upper-door { transform: perspective(900px) rotateY(84deg) translateZ(5px); }
+.scene-panel.opening-lower .lower-door { transform: perspective(900px) rotateY(84deg) translateZ(5px); }
+.scene-panel.is-opening.opening-upper .upper-door { animation: upper-door-open 790ms cubic-bezier(.16,.76,.2,1) forwards; }
+.scene-panel.is-opening.opening-lower .lower-door { animation: lower-door-open 790ms cubic-bezier(.16,.76,.2,1) forwards; }
 .scene-panel.is-opening .door-label { opacity: 0; }
-.scene-panel.is-opening .door-cavity { animation: cavity-cool-glow 760ms ease-out both; }
+.scene-panel.is-opening .door-cavity { animation: cavity-cool-glow 790ms ease-out both; }
+.scene-panel.is-opening.opening-upper .fridge-front,
+.scene-panel.is-opening.opening-lower .fridge-front { animation: fridge-exit-after-door 1320ms cubic-bezier(.18,.76,.18,1) both; }
+.scene-panel.is-opening.opening-upper .upper-interior,
+.scene-panel.is-opening.opening-lower .lower-interior { animation: interior-enter-after-door 1320ms cubic-bezier(.18,.78,.2,1) both; }
 
 @keyframes upper-door-open {
     0% { transform: perspective(900px) rotateY(0deg) translateZ(0); }
-    20% { transform: perspective(900px) rotateY(-12deg) translateZ(3px); }
-    68% { transform: perspective(900px) rotateY(-70deg) translateZ(5px); }
-    100% { transform: perspective(900px) rotateY(-84deg) translateZ(5px); }
+    20% { transform: perspective(900px) rotateY(12deg) translateZ(3px); }
+    68% { transform: perspective(900px) rotateY(70deg) translateZ(5px); }
+    100% { transform: perspective(900px) rotateY(84deg) translateZ(5px); }
 }
 
 @keyframes lower-door-open {
     0% { transform: perspective(900px) rotateY(0deg) translateZ(0); }
-    24% { transform: perspective(900px) rotateY(-10deg) translateZ(2px); }
-    70% { transform: perspective(900px) rotateY(-68deg) translateZ(5px); }
-    100% { transform: perspective(900px) rotateY(-84deg) translateZ(5px); }
+    24% { transform: perspective(900px) rotateY(10deg) translateZ(2px); }
+    70% { transform: perspective(900px) rotateY(68deg) translateZ(5px); }
+    100% { transform: perspective(900px) rotateY(84deg) translateZ(5px); }
+}
+
+@keyframes fridge-exit-after-door {
+    0%, 58% { opacity: 1; filter: blur(0); transform: scale(1) translateY(0); }
+    63% { opacity: 1; filter: blur(0); transform: scale(1.045) translateY(-3px); }
+    78% { opacity: .58; filter: blur(2px); transform: scale(1.16) translateY(12px); }
+    100% { opacity: 0; filter: blur(6px); transform: scale(1.3) translateY(35px); }
+}
+
+@keyframes interior-enter-after-door {
+    0%, 61% { opacity: 0; filter: blur(8px); transform: scale(.52) translateY(96px); }
+    70% { opacity: .18; filter: blur(6px); transform: scale(.64) translateY(68px); }
+    84% { opacity: .72; filter: blur(2px); transform: scale(.88) translateY(22px); }
+    100% { opacity: 1; filter: blur(0); transform: scale(1) translateY(0); }
 }
 
 @keyframes cavity-cool-glow {
