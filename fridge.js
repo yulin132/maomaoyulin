@@ -1,12 +1,14 @@
 (() => {
     const panel = document.querySelector(".scene-panel");
-    const locationCode = document.getElementById("locationCode");
-    const locationTitle = document.getElementById("locationTitle");
     const areaName = document.getElementById("areaName");
     const temperature = document.getElementById("temperature");
     const emptyMessage = document.getElementById("emptyMessage");
     const backButton = document.querySelector(".back-button");
     const soundButton = document.querySelector(".sound-button");
+    const inventoryToggle = document.getElementById("inventoryToggle");
+    const inventoryPanel = document.getElementById("inventoryPanel");
+    const inventoryClose = document.getElementById("inventoryClose");
+    const inventoryBackdrop = document.getElementById("inventoryBackdrop");
     const viewButtons = [...document.querySelectorAll("[data-view]")];
     const doorButtons = [...document.querySelectorAll("[data-open]")];
 
@@ -60,8 +62,6 @@
         if (!views[view]) return;
         panel.dataset.view = view;
         const data = views[view];
-        locationCode.textContent = data.code;
-        locationTitle.textContent = data.title;
         areaName.textContent = data.area;
         temperature.textContent = data.temperature;
         emptyMessage.textContent = data.message;
@@ -89,8 +89,20 @@
         if (soundEnabled) playChime("upper");
     });
 
+    function setInventoryOpen(open) {
+        document.body.classList.toggle("inventory-open", open);
+        inventoryToggle.setAttribute("aria-expanded", String(open));
+        inventoryPanel.setAttribute("aria-hidden", String(!open));
+    }
+
+    inventoryToggle.addEventListener("click", () => setInventoryOpen(!document.body.classList.contains("inventory-open")));
+    inventoryClose.addEventListener("click", () => setInventoryOpen(false));
+    inventoryBackdrop.addEventListener("click", () => setInventoryOpen(false));
+
     document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && panel.dataset.view !== "closed") setView("closed");
+        if (event.key !== "Escape") return;
+        if (document.body.classList.contains("inventory-open")) setInventoryOpen(false);
+        else if (panel.dataset.view !== "closed") setView("closed");
     });
 
     setView("closed", false);
