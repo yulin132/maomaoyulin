@@ -110,11 +110,11 @@
         await new Promise((resolve) => requestAnimationFrame(resolve));
 
         const doorAnimation = door.animate([
-            { transform: "perspective(900px) translate3d(0, 0, 0) rotateY(0deg)" },
-            { transform: "perspective(900px) translate3d(0, 0, 5px) rotateY(84deg)" }
+            { transform: "translate3d(0, 0, 0) rotateY(0deg)" },
+            { transform: "translate3d(0, 0, 0) rotateY(108deg)" }
         ], {
-            duration: 720,
-            easing: "cubic-bezier(.22,.72,.2,1)",
+            duration: 820,
+            easing: "cubic-bezier(.3,.05,.2,1)",
             fill: "forwards"
         });
 
@@ -122,7 +122,7 @@
             { opacity: .86 },
             { opacity: 1 }
         ], {
-            duration: 720,
+            duration: 820,
             easing: "ease-out",
             fill: "forwards"
         });
