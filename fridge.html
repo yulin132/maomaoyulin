@@ -41,15 +41,23 @@
                     <div class="floor-shadow" aria-hidden="true"></div>
 
                     <div class="fridge-front" id="fridgeFront" aria-label="一台立式老式灰色双门冰箱">
+                        <div class="control-deck" aria-hidden="true">
+                            <span class="deck-brand"><i>🍃</i> MAOMAO</span>
+                            <span class="deck-light"></span>
+                            <span class="deck-screen">05°C&nbsp;&nbsp; -18°C</span>
+                            <span class="deck-button"></span>
+                        </div>
                         <button class="fridge-door upper-door" type="button" data-open="upper" aria-label="打开上层冷藏室">
-                            <span class="brand-badge">MAOMAO</span>
-                            <span class="door-note">小岛厨房<br /><small>记得补货!</small></span>
+                            <span class="leaf-magnet">🍃</span>
+                            <span class="flower-magnet">🌼</span>
+                            <span class="face-magnet">ᵔᴥᵔ</span>
+                            <span class="door-note">今天也要<br /><small>好好吃饭!</small></span>
                             <span class="door-handle"></span>
                             <span class="door-label"><b>冷藏室</b><small>点击打开</small></span>
                         </button>
                         <button class="fridge-door lower-door" type="button" data-open="lower" aria-label="打开下层冷冻室">
                             <span class="door-handle"></span>
-                            <span class="energy-sticker"><i>🍃</i><b>节能住民</b><small>ISLAND ECO</small></span>
+                            <span class="energy-sticker"><i>🌱</i><b>新鲜住民</b><small>KEEP IT FRESH</small></span>
                             <span class="door-label"><b>冷冻室</b><small>点击打开</small></span>
                         </button>
                         <span class="fridge-foot foot-left"></span>
@@ -103,7 +111,7 @@
                     <span class="item-count" id="itemCount">0</span>
                 </div>
 
-                <div class="temperature-card">
+                <div class="temperature-card" aria-label="区域温度信息">
                     <div><span>当前区域</span><strong id="areaName">全部</strong></div>
                     <div><span>建议温度</span><strong id="temperature">—</strong></div>
                 </div>
@@ -115,10 +123,10 @@
                 </div>
 
                 <div class="future-slots" aria-label="预留的食材栏位">
-                    <div class="slot"><span>＋</span><small>栏位 01</small></div>
-                    <div class="slot"><span>＋</span><small>栏位 02</small></div>
-                    <div class="slot"><span>＋</span><small>栏位 03</small></div>
-                    <div class="slot"><span>＋</span><small>栏位 04</small></div>
+                    <div class="slot"><small>栏位 01</small><span>等待食材</span><b>＋</b></div>
+                    <div class="slot"><small>栏位 02</small><span>等待食材</span><b>＋</b></div>
+                    <div class="slot"><small>栏位 03</small><span>等待食材</span><b>＋</b></div>
+                    <div class="slot"><small>栏位 04</small><span>等待食材</span><b>＋</b></div>
                 </div>
                 <p class="inventory-note">第二阶段可在这里加入食材名称、数量与保质期。</p>
             </aside>
