@@ -89,20 +89,15 @@
         doorButtons.forEach((button) => { button.disabled = true; });
         playChime(view);
 
-        const doorDuration = prefersReducedMotion.matches ? 30 : 760;
-        const zoomDuration = prefersReducedMotion.matches ? 30 : 520;
+        setView(view, false);
 
+        const fullTransitionDuration = prefersReducedMotion.matches ? 60 : 1320;
         window.setTimeout(() => {
-            panel.classList.remove("is-opening");
-            setView(view, false);
-
-            window.setTimeout(() => {
-                panel.classList.remove(`opening-${view}`);
-                panel.removeAttribute("aria-busy");
-                doorButtons.forEach((button) => { button.disabled = false; });
-                isTransitioning = false;
-            }, zoomDuration);
-        }, doorDuration);
+            panel.classList.remove("is-opening", `opening-${view}`);
+            panel.removeAttribute("aria-busy");
+            doorButtons.forEach((button) => { button.disabled = false; });
+            isTransitioning = false;
+        }, fullTransitionDuration);
     }
 
     doorButtons.forEach((button) => button.addEventListener("click", () => openCompartment(button.dataset.open)));
