@@ -4,9 +4,9 @@
     --animal-text: #725d42;
     --animal-text-soft: #7c5734;
     --animal-cream: #fff9e6;
-    --matte-grey: #858987;
-    --matte-grey-deep: #626764;
-    --matte-grey-dark: #505552;
+    --matte-grey: #aaada9;
+    --matte-grey-deep: #8b908c;
+    --matte-grey-dark: #707672;
     --cold-blue: #dcefee;
 }
 
@@ -211,4 +211,188 @@ button { -webkit-tap-highlight-color: transparent; }
 
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+/* =========================================================
+   Centered appliance composition + collapsible inventory
+   ========================================================= */
+html, body { min-height: 100%; }
+body { overflow-x: hidden; }
+
+.fridge-page {
+    width: 100%;
+    min-height: 100svh;
+    padding: 68px 20px 0;
+}
+
+.fridge-app {
+    display: grid;
+    grid-template-columns: 1fr;
+    place-items: center;
+    width: 100%;
+    min-height: calc(100svh - 68px);
+}
+
+.scene-panel {
+    position: relative;
+    width: min(760px, 100%);
+    min-height: calc(100svh - 68px);
+}
+
+.fridge-stage {
+    width: 100%;
+    min-height: calc(100svh - 68px);
+}
+
+.scene-toolbar {
+    top: 24px;
+    left: 18px;
+    right: 18px;
+    pointer-events: none;
+}
+
+.toolbar-spacer { flex: 1; }
+.scene-toolbar .back-button { pointer-events: auto; }
+.sound-button,
+.stage-hint { display: none; }
+
+.fridge-front {
+    background: #969b97;
+    border-color: #7d837f;
+    box-shadow: 13px 17px 0 rgba(75, 112, 84, .27), 0 23px 32px rgba(56, 75, 61, .2);
+}
+
+.fridge-front::after { border-color: rgba(255,255,255,.17); }
+
+.control-deck {
+    color: #f0f1ec;
+    background: #a4a8a4;
+    border-color: #858a86;
+    box-shadow: inset 0 -5px 0 rgba(91, 96, 92, .2);
+}
+
+.fridge-door {
+    color: #fff9e6;
+    background: #b7bab6;
+    border-color: #929793;
+    box-shadow: inset 3px 3px 0 rgba(255,255,255,.14), inset -6px -5px 0 rgba(91,96,92,.1);
+}
+
+.fridge-door:hover,
+.fridge-door:focus-visible { background: #c0c3bf; }
+
+.door-handle {
+    border-color: #858a86;
+    background: #979c98;
+    box-shadow: -4px 5px 0 rgba(89,94,90,.16);
+}
+
+.fridge-foot { background: #777d79; }
+
+.inventory-toggle {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    z-index: 72;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    width: 54px;
+    padding: 14px 8px;
+    border: 0;
+    border-radius: 18px 0 0 18px;
+    color: var(--animal-text);
+    background: rgba(255, 249, 230, .96);
+    box-shadow: -4px 6px 16px rgba(74,58,40,.14);
+    cursor: pointer;
+    transform: translateY(-50%);
+    transition: transform 220ms ease, opacity 180ms ease, background 180ms ease;
+}
+
+.inventory-toggle:hover { background: #fffdf7; transform: translateY(-50%) translateX(-3px); }
+.inventory-toggle span { font-size: 21px; }
+.inventory-toggle strong { font-size: 11px; line-height: 1.35; writing-mode: vertical-rl; letter-spacing: .08em; }
+.inventory-toggle b { display: grid; place-items: center; width: 23px; height: 23px; border-radius: 50%; color: #fff; background: var(--animal-primary); font-size: 11px; }
+.inventory-open .inventory-toggle { opacity: 0; pointer-events: none; transform: translateY(-50%) translateX(20px); }
+
+.inventory-backdrop {
+    position: fixed;
+    z-index: 68;
+    inset: 0;
+    visibility: hidden;
+    opacity: 0;
+    background: rgba(74,58,40,.13);
+    transition: opacity 240ms ease, visibility 240ms ease;
+}
+
+.inventory-open .inventory-backdrop { visibility: visible; opacity: 1; }
+
+.inventory-panel {
+    position: fixed;
+    z-index: 74;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(350px, 88vw);
+    margin: 0;
+    padding: 92px 28px 28px;
+    overflow-y: auto;
+    color: var(--animal-text);
+    background: rgba(255, 249, 230, .98);
+    box-shadow: -18px 0 38px rgba(74,58,40,.16);
+    transform: translateX(105%);
+    transition: transform 380ms cubic-bezier(.18,.8,.2,1);
+}
+
+.inventory-panel::before { display: none; }
+.inventory-open .inventory-panel { transform: translateX(0); }
+
+.inventory-heading {
+    color: var(--animal-text);
+    text-shadow: none;
+}
+
+.inventory-heading small { color: var(--animal-primary-deep); opacity: 1; }
+.inventory-heading h2 { font-size: 21px; }
+.item-count { color: var(--animal-primary-deep); border-color: rgba(25,200,185,.35); background: #e6f9f6; }
+.inventory-close { width: 32px; height: 32px; padding: 0; border: 0; color: #9b856b; background: transparent; font-size: 26px; line-height: 1; cursor: pointer; }
+.inventory-close:hover { color: var(--animal-primary-deep); }
+
+.temperature-card div { border-left-color: rgba(25,200,185,.42); }
+.temperature-card span { color: #a58d70; }
+.temperature-card strong { color: var(--animal-text); text-shadow: none; }
+.empty-inventory { color: var(--animal-text); }
+.empty-inventory strong { text-shadow: none; }
+.empty-inventory p { color: #9b856b; }
+.empty-basket { border-color: #8eddd2; }
+.empty-basket span { border-color: #8eddd2; }
+.empty-basket i { background: rgba(25,200,185,.28); }
+.future-slots { border-top-color: rgba(114,93,66,.2); }
+.slot { color: #9b856b; border-bottom-color: rgba(114,93,66,.18); }
+.slot b { color: var(--animal-primary-deep); }
+.inventory-note { color: #a8957e; }
+
+@media (max-width: 620px) {
+    .fridge-page { width: 100%; padding: 60px 8px 0; }
+    .fridge-app,
+    .scene-panel,
+    .fridge-stage { min-height: calc(100svh - 60px); }
+    .scene-toolbar { top: 14px; left: 8px; right: 8px; }
+    .inventory-toggle {
+        top: auto;
+        right: 16px;
+        bottom: 16px;
+        justify-content: center;
+        width: 52px;
+        height: 52px;
+        padding: 0;
+        border-radius: 50%;
+        transform: none;
+    }
+    .inventory-toggle:hover { transform: translateY(-2px); }
+    .inventory-toggle strong { display: none; }
+    .inventory-toggle b { position: absolute; top: -4px; right: -4px; width: 21px; height: 21px; }
+    .inventory-open .inventory-toggle { transform: translateX(20px); }
+    .inventory-panel { width: min(360px, 92vw); padding: 80px 22px 24px; }
 }

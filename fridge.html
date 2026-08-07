@@ -20,20 +20,11 @@
     </nav>
 
     <main class="fridge-page">
-        <header class="page-heading">
-            <span class="eyebrow"><i></i> NOOK HOME APPLIANCE <i></i></span>
-            <h1>小岛冰箱</h1>
-            <p>今天也要记得看看冰箱里还有什么。</p>
-        </header>
-
         <section class="fridge-app" aria-live="polite">
             <div class="scene-panel">
                 <div class="scene-toolbar">
                     <button class="round-button back-button" type="button" aria-label="返回整台冰箱" title="返回整台冰箱">←</button>
-                    <div class="location-copy">
-                        <small id="locationCode">FRIDGE 01</small>
-                        <strong id="locationTitle">整台冰箱</strong>
-                    </div>
+                    <span class="toolbar-spacer"></span>
                     <button class="round-button sound-button" type="button" aria-label="切换冰箱提示音" aria-pressed="true" title="提示音：开">♪</button>
                 </div>
 
@@ -94,14 +85,14 @@
                     </div>
                 </div>
 
-                <div class="level-switch" role="group" aria-label="冰箱区域快速切换">
-                    <button type="button" class="level-button is-active" data-view="closed"><span>🏠</span>整台冰箱</button>
-                    <button type="button" class="level-button" data-view="upper"><span>🥬</span>上层冷藏</button>
-                    <button type="button" class="level-button" data-view="lower"><span>❄️</span>下层冷冻</button>
-                </div>
             </div>
 
-            <aside class="inventory-panel">
+            <button class="inventory-toggle" id="inventoryToggle" type="button" aria-controls="inventoryPanel" aria-expanded="false">
+                <span>🧺</span><strong>冰箱里有什么</strong><b>0</b>
+            </button>
+            <div class="inventory-backdrop" id="inventoryBackdrop"></div>
+
+            <aside class="inventory-panel" id="inventoryPanel" aria-hidden="true">
                 <div class="inventory-heading">
                     <span class="inventory-icon">🧺</span>
                     <div>
@@ -109,6 +100,7 @@
                         <h2>冰箱里有什么</h2>
                     </div>
                     <span class="item-count" id="itemCount">0</span>
+                    <button class="inventory-close" id="inventoryClose" type="button" aria-label="收起冰箱清单">×</button>
                 </div>
 
                 <div class="temperature-card" aria-label="区域温度信息">
@@ -132,16 +124,6 @@
             </aside>
         </section>
     </main>
-
-    <footer class="footer">
-        <div>
-            <a href="./index.html">首页</a>
-            <a href="./diary.html">读研日记</a>
-            <a href="./book-of-answers/">答案之书</a>
-            <a href="./fridge.html">小岛冰箱</a>
-        </div>
-        <p>© 2026 maomaoyulin · Keep it fresh 🧊</p>
-    </footer>
 
     <script src="./fridge.js"></script>
 </body>
