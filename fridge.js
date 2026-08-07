@@ -80,7 +80,7 @@
         if (announce) playChime(view);
     }
 
-    function openCompartment(view) {
+    async function openCompartment(view) {
         if (isTransitioning || !views[view]) return;
         isTransitioning = true;
         setInventoryOpen(false);
@@ -89,15 +89,69 @@
         doorButtons.forEach((button) => { button.disabled = true; });
         playChime(view);
 
-        setView(view, false);
+        const front = document.getElementById("fridgeFront");
+        const door = panel.querySelector(`.${view}-door`);
+        const cavity = panel.querySelector(`.${view}-cavity`);
+        const interior = document.getElementById(`${view}Interior`);
 
-        const fullTransitionDuration = prefersReducedMotion.matches ? 60 : 1320;
-        window.setTimeout(() => {
+        const finish = () => {
             panel.classList.remove("is-opening", `opening-${view}`);
             panel.removeAttribute("aria-busy");
             doorButtons.forEach((button) => { button.disabled = false; });
             isTransitioning = false;
-        }, fullTransitionDuration);
+        };
+
+        if (prefersReducedMotion.matches || !door?.animate || !front?.animate || !interior?.animate) {
+            setView(view, false);
+            finish();
+            return;
+        }
+
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+
+        const doorAnimation = door.animate([
+            { transform: "perspective(900px) translate3d(0, 0, 0) rotateY(0deg)" },
+            { transform: "perspective(900px) translate3d(0, 0, 5px) rotateY(84deg)" }
+        ], {
+            duration: 720,
+            easing: "cubic-bezier(.22,.72,.2,1)",
+            fill: "forwards"
+        });
+
+        const cavityAnimation = cavity?.animate([
+            { opacity: .86 },
+            { opacity: 1 }
+        ], {
+            duration: 720,
+            easing: "ease-out",
+            fill: "forwards"
+        });
+
+        await doorAnimation.finished;
+
+        const frontAnimation = front.animate([
+            { transform: "translate3d(0, 0, 0) scale(1)", opacity: 1 },
+            { transform: "translate3d(0, 30px, 0) scale(1.28)", opacity: 0 }
+        ], {
+            duration: 580,
+            easing: "cubic-bezier(.2,.72,.18,1)",
+            fill: "forwards"
+        });
+
+        const interiorAnimation = interior.animate([
+            { transform: "translate3d(0, 78px, 0) scale(.58)", opacity: 0 },
+            { transform: "translate3d(0, 0, 0) scale(1)", opacity: 1 }
+        ], {
+            duration: 580,
+            easing: "cubic-bezier(.18,.78,.2,1)",
+            fill: "forwards"
+        });
+
+        await Promise.all([frontAnimation.finished, interiorAnimation.finished]);
+
+        setView(view, false);
+        [doorAnimation, cavityAnimation, frontAnimation, interiorAnimation].forEach((animation) => animation?.cancel());
+        finish();
     }
 
     doorButtons.forEach((button) => button.addEventListener("click", () => openCompartment(button.dataset.open)));
